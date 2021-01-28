@@ -1,0 +1,14 @@
+{:docker-exposure #{:websocket :rest :mqtt}
+ :docker {:api-version "v1.40"
+          :hosts {:local {:uri "///var/run/docker.sock"
+                          :events true}
+                  :remote {:uri "tcp://192.168.0.1:2375"
+                           :events false}}}
+ :websocket {:refresh 300}
+ :mqtt {:broker-uri "tcp://192.168.0.2:1883"
+        :refresh 300
+        :username "user"
+        :password "pass"}
+ :rest {:port 3000
+        :username "user"
+        :pass "pass"}}
