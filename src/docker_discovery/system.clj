@@ -1,15 +1,18 @@
 (ns docker-discovery.system)
 
-(defonce context (atom {}))
+(defonce ^:private *context* (atom {}))
+
+(defn service-context
+  ([service]
+   (get-in @*context* [:contexts service]))
+  ([service context]
+   (reset! *context* (assoc-in @*context* [:contexts service] context))))
+
+(defn remove-service-context [service]
+  (reset! *context* (update @*context* :contexts #(dissoc % service))))
 
 (defn started?
-  ([]
-   (:started? @context))
   ([service]
-   (get-in @context [service :started?])))
-
-(defn set-service-state
-  ([service value]
-   (reset! context (assoc-in @context [service :started?] value)))
-  ([value]
-   (reset! context (assoc @context :started? value))))
+   (service-context service))
+  ([]
+   (started? :main)))
