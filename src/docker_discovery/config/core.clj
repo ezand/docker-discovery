@@ -1,7 +1,8 @@
 (ns docker-discovery.config.core
   (:require [docker-discovery.config.env :as env]
-            [omniconf.core :as cfg]
-            [docker-discovery.util :as util]))
+            [docker-discovery.log :as log]
+            [docker-discovery.util :as util]
+            [omniconf.core :as cfg]))
 
 (cfg/define
   {:docker-exposure {:type :edn
@@ -25,6 +26,7 @@
 (def ^:private ^:const default-config-file-location "/etc/docker-discovery/config.edn")
 
 (defn load-config []
+  (cfg/set-logging-fn (fn [& args] (log/info args)))
   (when-let [config-file (or (util/file (env/str-value env/CONFIG_FILE))
                              (util/file default-config-file-location))]
     (cfg/populate-from-file config-file))
