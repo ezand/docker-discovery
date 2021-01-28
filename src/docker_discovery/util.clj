@@ -1,6 +1,7 @@
 (ns docker-discovery.util
   (:require [superstring.core :as str]
-            [clojure.java.io :as io])
+            [clojure.java.io :as io]
+            [omniconf.core :as cfg])
   (:import [java.util Map Map$Entry]))
 
 ;;;;;;;;;;;;;;;;;;;
@@ -66,3 +67,6 @@
 (defn file [file-location]
   (when-let [file (io/file file-location)]
     (when (.exists file) file)))
+
+(defn exposure-enabled? [exposure]
+  (get (cfg/get :docker-exposure) exposure))
