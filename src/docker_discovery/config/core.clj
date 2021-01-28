@@ -28,4 +28,5 @@
   (when-let [config-file (or (util/file (env/str-value env/CONFIG_FILE))
                              (util/file default-config-file-location))]
     (cfg/populate-from-file config-file))
-  (cfg/populate-from-map (env/env->config)))
+  (cfg/populate-from-map (env/env->config))
+  (cfg/verify))
