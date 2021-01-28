@@ -3,7 +3,7 @@
             [docker-discovery.log :as log]
             [docker-discovery.mqtt.core :as mqtt]
             [docker-discovery.rest.core :as rest]
-            [docker-discovery.user :refer [started? set-state]]
+            [docker-discovery.system :refer [started? set-service-state]]
             [docker-discovery.util :as util]
             [docker-discovery.websocket.core :as websocket])
   (:gen-class))
@@ -18,7 +18,7 @@
     (when (util/exposure-enabled? :mqtt)
       (mqtt/start))
 
-    (set-state true)
+    (set-service-state true)
     (log/info "Docker Discovery has started.")))
 
 (defn stop []
@@ -27,7 +27,7 @@
     (websocket/stop)
     (mqtt/stop)
 
-    (set-state false)
+    (set-service-state false)
     (log/info "Docker Discovery has stopped.")))
 
 (defn restart []

@@ -1,13 +1,13 @@
 (ns docker-discovery.mqtt.core
   (:require [docker-discovery.log :as log]
-            [docker-discovery.user :refer [started? set-state]]))
+            [docker-discovery.system :refer [started? set-service-state]]))
 
 (defn start []
   (when-not (started? :mqtt)
-    (set-state :mqtt true)
+    (set-service-state :mqtt true)
     (log/info "MQTT service has started.")))
 
 (defn stop []
   (when (started? :mqtt)
-    (set-state :mqtt false)
+    (set-service-state :mqtt false)
     (log/info "MQTT service has stopped.")))
