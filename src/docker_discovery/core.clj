@@ -4,7 +4,8 @@
             [docker-discovery.mqtt.core :as mqtt]
             [docker-discovery.system :refer [started? service-context remove-service-context]]
             [docker-discovery.util :as util]
-            [docker-discovery.web.core :as web])
+            [docker-discovery.web.core :as web]
+            [omniconf.core :as cfg])
   (:gen-class))
 
 (defn start [& args]
@@ -16,6 +17,7 @@
     (when (util/exposure-enabled? :mqtt)
       (mqtt/start))
 
+    (log/set-log-level! (cfg/get :log-level))
     (service-context :main true)
     (log/info "Docker Discovery has started.")))
 

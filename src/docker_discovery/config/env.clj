@@ -7,6 +7,7 @@
 ;; Environment variables ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (def ^:private ^:const docker-property-regex #"HOST_(.*)_(.*)")
+(def ^:const LOG_LEVEL "LOG_LEVEL")
 (def ^:const CONFIG_FILE "CONFIG_FILE")
 (def ^:const DOCKER_API_VERSION "DOCKER_API_VERSION")
 (def ^:const DOCKER_EXPOSURE "DOCKER_EXPOSURE")
@@ -41,6 +42,9 @@
   (try
     (some-> (System/getenv key) (str/trim) (Integer/parseInt))
     (catch Throwable _ nil)))
+
+(defn- kwd-value [key]
+  (some-> (str-value key) keyword))
 
 (defn- keywordize-all [xs]
   (map keyword xs))
@@ -119,6 +123,7 @@
 
 (defn env->config []
   (-> {}
+      (util/assoc-some :log-level (kwd-value LOG_LEVEL))
       (util/assoc-some :docker (docker-props))
       (util/assoc-some :docker-exposure (docker-exposure))
       (util/assoc-some :web (web-props))

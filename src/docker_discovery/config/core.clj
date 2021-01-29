@@ -5,7 +5,9 @@
             [omniconf.core :as cfg]))
 
 (cfg/define
-  {:docker-exposure {:type :edn
+  {:log-level {:one-of #{:info :debug :trace :error :warn}
+               :default :debug}
+   :docker-exposure {:type :edn
                      :default #{:websocket :rest}}
    :docker {:nested {:api-version {:type :string
                                    :default "v1.40"}

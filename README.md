@@ -17,6 +17,7 @@ FIXME: explanation
 ### Environment variables
 | Name | Default | Example |
 |------|---------|---------|
+| `LOG_LEVEL` | | |
 | `CONFIG_FILE` | | |
 | `DOCKER_API_VERSION` | | |
 | `DOCKER_EXPOSURE` | | |

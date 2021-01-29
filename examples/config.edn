@@ -1,4 +1,5 @@
-{:docker-exposure #{:websocket :rest :mqtt}
+{:log-level :debug
+ :docker-exposure #{:websocket :rest :mqtt}
  :docker {:api-version "v1.40"
           :hosts {:local {:uri "///var/run/docker.sock"
                           :events true}

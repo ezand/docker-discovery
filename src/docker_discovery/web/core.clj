@@ -6,6 +6,7 @@
             [docker-discovery.rest.core :as rest]
             [docker-discovery.system :refer [started? service-context remove-service-context]]
             [docker-discovery.web.authentication :as auth]
+            [docker-discovery.websocket.core :as websocket]
             [immutant.web :as web]
             [omniconf.core :as cfg]
             [ring.middleware.defaults :refer :all]))
@@ -22,16 +23,20 @@
 (defn start []
   (when-not (started? :web)
     (->> (web/run (-> (wrap-defaults app site-defaults)
-                      (auth/wrap-rest-authentication))
+                      (auth/wrap-rest-authentication)
+                      (websocket/wrap-ws))
                   {:port (cfg/get :web :port)})
          (service-context :web))
 
     (log/info "Web service has started.")
     (when (util/exposure-enabled? :rest)
-      (log/info "REST api is enabled."))))
+      (log/info "REST api is enabled."))
+    (when (util/exposure-enabled? :websocket)
+      (log/info "WebSocket support is enabled."))))
 
 (defn stop []
   (when (started? :web)
+    (websocket/stop)
     (-> (service-context :web)
         (web/stop))
 
