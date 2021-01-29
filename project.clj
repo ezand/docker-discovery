@@ -11,6 +11,7 @@
                  [lispyclouds/clj-docker-client "1.0.2"]
                  [medley "1.3.0"]
                  [org.clojure/clojure "1.10.1"]
+                 [org.clojure/data.json "1.0.0"]
                  [org.immutant/web "2.1.10"]
                  [ring/ring-defaults "0.3.2"]
                  [ring-basic-authentication "1.1.0"]
