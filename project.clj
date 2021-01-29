@@ -10,6 +10,8 @@
                  [medley "1.3.0"]
                  [org.clojure/clojure "1.10.1"]
                  [org.immutant/web "2.1.10"]
+                 [ring/ring-defaults "0.3.2"]
+                 [ring-basic-authentication "1.1.0"]
                  [superstring "3.0.0"]]
   :main ^:skip-aot docker-discovery.core
   :target-path "target/%s"

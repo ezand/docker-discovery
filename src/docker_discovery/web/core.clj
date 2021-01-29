@@ -1,12 +1,14 @@
 (ns docker-discovery.web.core
   (:require [compojure.core :refer :all]
             [compojure.route :as route]
+            [docker-discovery.util :as util]
             [docker-discovery.log :as log]
             [docker-discovery.rest.core :as rest]
             [docker-discovery.system :refer [started? service-context remove-service-context]]
+            [docker-discovery.web.authentication :as auth]
             [immutant.web :as web]
             [omniconf.core :as cfg]
-            [docker-discovery.util :as util]))
+            [ring.middleware.defaults :refer :all]))
 
 (defroutes app
   (GET "/" [] "Welcome to Docker Discovery!")
@@ -19,7 +21,9 @@
 
 (defn start []
   (when-not (started? :web)
-    (->> (web/run app {:port (cfg/get :web :port)})
+    (->> (web/run (-> (wrap-defaults app site-defaults)
+                      (auth/wrap-rest-authentication))
+                  {:port (cfg/get :web :port)})
          (service-context :web))
 
     (log/info "Web service has started.")
