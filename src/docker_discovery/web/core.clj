@@ -12,13 +12,13 @@
             [ring.middleware.defaults :refer :all]))
 
 (defroutes app
-  (GET "/" [] "Welcome to Docker Discovery!")
+  (GET "/" [] (util/json-response {:message "Welcome to Docker Discovery!"}))
 
   (when (util/exposure-enabled? :rest)
     (context "/api" [_]
       rest/rest-routes))
 
-  (route/not-found "Not found"))
+  (route/not-found (util/json-response {:message "Endpoint not found"})))
 
 (defn start []
   (when-not (started? :web)

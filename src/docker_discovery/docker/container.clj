@@ -1,6 +1,18 @@
 (ns docker-discovery.docker.container
   (:require [clojure.data.json :as json]
-            [docker-discovery.docker.core :as docker]))
+            [docker-discovery.docker.core :as docker]
+            [docker-discovery.util :as util]))
+
+;;;;;;;;;;;
+;; Utils ;;
+;;;;;;;;;;;
+(defn- assoc-names [container]
+  (when container
+    (-> container
+        (util/assoc-some
+          :name (util/container-name container)
+          :additional-names (util/container-additional-names container))
+        (dissoc :names))))
 
 ;;;;;;;;;;;;;
 ;; Filters ;;
@@ -8,7 +20,7 @@
 (defn id-filter [container-id]
   (when container-id {:id [container-id]}))
 
-(defn id-filter [container-name]
+(defn name-filter [container-name]
   (when container-name {:name [container-name]}))
 
 ;;;;;;;;;;;;;;
@@ -23,8 +35,9 @@
 ;; Endpoints ;;
 ;;;;;;;;;;;;;;;
 (defn search [host filters]
-  (->> (search-request filters)
-       (docker/invoke host :containers)))
+  (some->> (search-request filters)
+           (docker/invoke host :containers)
+           (map assoc-names)))
 
 (defn find-all [host]
   (search host {}))

@@ -1,7 +1,10 @@
 (ns docker-discovery.util
   (:require [superstring.core :as str]
             [clojure.java.io :as io]
-            [omniconf.core :as cfg])
+            [omniconf.core :as cfg]
+            [clojure.data.json :as json]
+            [clojure.walk :as walk]
+            [clojure.set :as set])
   (:import [java.util Map Map$Entry]))
 
 ;;;;;;;;;;;;;;;;;;;
@@ -64,9 +67,98 @@
             (coll? x)) (if (not-empty x) x nil)
         :else nil))
 
+(defn trim-to-empty [xs]
+  (if-let [coll (seq (remove nil? xs))]
+    coll
+    []))
+
 (defn file [file-location]
   (when-let [file (io/file file-location)]
     (when (.exists file) file)))
 
 (defn exposure-enabled? [exposure]
   (get (cfg/get :docker-exposure) exposure))
+
+(defn- camelize-keys*
+  "Rename the keys in `m` to use the camelCase naming convention."
+  [m]
+  (set/rename-keys
+    m
+    (reduce
+      (fn rename-key [acc k]
+        (letfn [(->camel-case [k]
+                  (let [key-name (name k)]
+                    (keyword (if (str/starts-with? key-name "_")
+                               key-name
+                               (str/camel-case key-name)))))]
+          (cond
+            (keyword? k) (assoc acc k (->camel-case k))
+            :else acc)))
+      {}
+      (keys m))))
+
+(defn camelize-keys
+  "Recursively rename the keys in `m` to use the camelCase naming convention."
+  [m]
+  (walk/postwalk
+    (fn [v]
+      (if (and (map? v)
+               (not (record? v)))
+        (camelize-keys* v)
+        v))
+    m))
+
+(defn- lispy-keys*
+  "Rename the keys in `m` to use the lisp-case naming convention."
+  [m]
+  (set/rename-keys
+    m
+    (reduce
+      (fn rename-key [acc k]
+        (letfn [(->lisp-case [k]
+                  (let [key-name (name k)]
+                    (keyword (if (str/starts-with? key-name "_")
+                               key-name
+                               (str/lisp-case key-name)))))]
+          (cond
+            (keyword? k)
+            (assoc acc k (->lisp-case k))
+            :else acc)))
+      {}
+      (keys m))))
+
+(defn lispy-keys
+  "Recurisvely rename the keys in `m` to use the lisp-case naming convention."
+  [m]
+  (walk/postwalk
+    (fn [v]
+      (if (and (map? v)
+               (not (record? v)))
+        (lispy-keys* v)
+        v))
+    m))
+
+;;;;;;;;;;;;;;;;;;
+;; Docker utils ;;
+;;;;;;;;;;;;;;;;;;
+(defn container-name [{:keys [names]}]
+  (some-> (first names)
+          (str/replace-first "/" "")))
+
+(defn container-additional-names [{:keys [names]}]
+  (some->> (rest names)
+           (map #(str/replace-first % "/" ""))))
+
+(defn docker-host-configured? [host]
+  (cfg/get :docker :hosts (keyword host)))
+
+;;;;;;;;;;;;;;;
+;; Web utils ;;
+;;;;;;;;;;;;;;;
+(defn json-response [x]
+  {:status (if x 200 404)
+   :headers {"Content-Type" "text/json"}
+   :body (json/write-str
+           (if x
+             (camelize-keys x)
+             {:message "Resource not found"}))})

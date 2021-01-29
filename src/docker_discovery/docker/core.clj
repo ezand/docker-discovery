@@ -18,6 +18,7 @@
                            :category category)))
 
 (defn invoke [host category request]
-  (some-> (client-context host category)
+  (some-> (client-context (keyword host) category)
           (client)
-          (docker/invoke request)))
+          (docker/invoke request)
+          (util/lispy-keys)))
