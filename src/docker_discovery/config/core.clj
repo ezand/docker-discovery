@@ -22,7 +22,7 @@
    :rest {:nested {:username {:type :string}
                    :password {:type :string
                               :secret true}}}
-   :mqtt {:nested {:broker-uri {:type :string}
+   :mqtt {:nested {:uri {:type :string}
                    :username {:type :string}
                    :password {:type :string
                               :secret true}

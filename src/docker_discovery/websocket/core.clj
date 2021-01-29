@@ -15,7 +15,7 @@
   (async/send! channel "Ready to reverse your messages!"))
 
 (defn disconnect! [channel {:keys [code reason]}]
-  (log/debug "WebSocket channel closed. Code:" code ", Reason:" reason)
+  (log/trace "WebSocket channel closed. Code:" code ", Reason:" reason)
   (swap! channels #(remove #{channel} %)))
 
 (defn handle-message! [channel message]

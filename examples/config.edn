@@ -9,7 +9,7 @@
                            :password "passwd"}}}
  :web {:port 3000}
  :websocket {:refresh 300}
- :mqtt {:broker-uri "tcp://192.168.0.2:1883"
+ :mqtt {:uri "tcp://192.168.0.2:1883"
         :refresh 300
         :username "user"
         :password "pass"}
