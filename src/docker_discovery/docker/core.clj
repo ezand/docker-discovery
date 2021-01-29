@@ -10,15 +10,20 @@
                   :conn {:uri uri}
                   :api-version (cfg/get :docker :api-version)}))
 
-(def client (memoize load-client))
+(def ^:private client (memoize load-client))
 
 (defn- client-context [host category]
   (some-> (cfg/get :docker :hosts host)
           (util/assoc-some :host host
                            :category category)))
 
-(defn invoke [host category request]
-  (some-> (client-context (keyword host) category)
-          (client)
-          (docker/invoke request)
-          (util/lispy-keys)))
+(defn invoke
+  ([host category request]
+   (invoke host category false request))
+  ([host category stream? request]
+   (let [result (some-> (client-context (keyword host) category)
+                        (client)
+                        (docker/invoke request))]
+     (if stream?
+       (.getInputStream result)
+       (util/lispy-keys result)))))
