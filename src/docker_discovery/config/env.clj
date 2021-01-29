@@ -8,6 +8,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (def ^:private ^:const docker-property-regex #"HOST_(.*)_(.*)")
 (def ^:const CONFIG_FILE "CONFIG_FILE")
+(def ^:const DOCKER_API_VERSION "DOCKER_API_VERSION")
 (def ^:const DOCKER_EXPOSURE "DOCKER_EXPOSURE")
 (def ^:const HTTP_PORT "HTTP_PORT")
 (def ^:const HTTP_USERNAME "HTTP_USERNAME")
@@ -78,6 +79,7 @@
 
 (defn- docker-props []
   (-> {}
+      (util/assoc-some :api-version (str-value DOCKER_API_VERSION))
       (util/assoc-some :hosts (docker-hosts))
       (util/trim-to-nil)))
 

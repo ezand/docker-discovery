@@ -14,7 +14,24 @@ FIXME: explanation
 
 ## Options
 
-FIXME: listing of options this app accepts.
+### Environment variables
+| Name | Default | Example |
+|------|---------|---------|
+| `CONFIG_FILE` | | |
+| `DOCKER_API_VERSION` | | |
+| `DOCKER_EXPOSURE` | | |
+| `HTTP_PORT` | | |
+| `HTTP_USERNAME` | | |
+| `HTTP_PASSWORD` | | |
+| `MQTT_URI` | | |
+| `MQTT_USERNAME` | | |
+| `MQTT_PASSWORD` | | |
+| `MQTT_REFRESH` | | |
+| `WEBSOCKET_REFRESH` | | |
+| `DOCKER_<HOST>_URI` | | |
+| `DOCKER_<HOST>_EVENTS` | | |
+| `DOCKER_<HOST>_USERNAME` | | |
+| `DOCKER_<HOST>_PASSWORD` | | |
 
 ## Examples
 
