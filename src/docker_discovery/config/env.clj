@@ -90,9 +90,12 @@
           (set)
           (util/trim-to-nil)))
 
+(defn- web-props []
+  (-> {}
+      (util/assoc-some :port (int-value HTTP_PORT))))
+
 (defn- rest-props []
   (-> {}
-      (util/assoc-some :port (int-value HTTP_PORT))
       (util/assoc-some :username (str-value HTTP_USERNAME))
       (util/assoc-some :password (str-value HTTP_PASSWORD))
       (util/trim-to-nil)))
@@ -116,6 +119,7 @@
   (-> {}
       (util/assoc-some :docker (docker-props))
       (util/assoc-some :docker-exposure (docker-exposure))
+      (util/assoc-some :web (web-props))
       (util/assoc-some :rest (rest-props))
       (util/assoc-some :mqtt (mqtt-props))
       (util/assoc-some :websocket (websocket-props))))

@@ -2,19 +2,17 @@
   (:require [docker-discovery.config.core :as config]
             [docker-discovery.log :as log]
             [docker-discovery.mqtt.core :as mqtt]
-            [docker-discovery.rest.core :as rest]
             [docker-discovery.system :refer [started? service-context remove-service-context]]
             [docker-discovery.util :as util]
-            [docker-discovery.websocket.core :as websocket])
+            [docker-discovery.web.core :as web])
   (:gen-class))
 
 (defn start [& args]
   (when-not (started?)
     (config/load-config)
-    (when (util/exposure-enabled? :rest)
-      (rest/start))
-    (when (util/exposure-enabled? :websocket)
-      (websocket/start))
+    (when (or (util/exposure-enabled? :rest)
+              (util/exposure-enabled? :websocket))
+      (web/start))
     (when (util/exposure-enabled? :mqtt)
       (mqtt/start))
 
@@ -23,8 +21,7 @@
 
 (defn stop []
   (when (started?)
-    (rest/stop)
-    (websocket/stop)
+    (web/stop)
     (mqtt/stop)
 
     (remove-service-context :main)

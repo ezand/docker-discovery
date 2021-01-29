@@ -11,10 +11,10 @@
                                    :default "v1.40"}
                      :hosts {:nested {:name {:uri {:type :string}
                                              :events {:type :boolean}}}}}}
+   :http {:nested {:port {:type :number
+                          :default 3000}}}
    :websocket {:nested {:refresh {:type :number}}}
-   :rest {:nested {:port {:type :number
-                          :default 3000}
-                   :username {:type :string}
+   :rest {:nested {:username {:type :string}
                    :password {:type :string
                               :secret true}}}
    :mqtt {:nested {:broker-uri {:type :string}

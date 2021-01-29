@@ -4,11 +4,11 @@
                           :events true}
                   :remote {:uri "tcp://192.168.0.1:2375"
                            :events false}}}
+ :web {:port 3000}
  :websocket {:refresh 300}
  :mqtt {:broker-uri "tcp://192.168.0.2:1883"
         :refresh 300
         :username "user"
         :password "pass"}
- :rest {:port 3000
-        :username "user"
+ :rest {:username "user"
         :pass "pass"}}
