@@ -72,13 +72,13 @@
 (defn- docker-host [acc [k v]]
   (let [[host key] (host-property k)
         host-props (get acc host {})]
-    (assoc acc host (assoc host-props key (docker-host-property-value key v)))))
+    (assoc acc host (-> (assoc host-props key (docker-host-property-value key v))
+                        (merge docker-host-defaults)))))
 
 (defn- docker-hosts []
   (->> (System/getenv)
        (medley/filter-keys #(re-matches docker-property-regex %))
        (reduce docker-host {})
-       (merge docker-host-defaults)
        (util/trim-to-nil)))
 
 (defn- docker-props []
