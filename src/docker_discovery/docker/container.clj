@@ -1,7 +1,8 @@
 (ns docker-discovery.docker.container
   (:require [clojure.data.json :as json]
             [docker-discovery.docker.core :as docker]
-            [docker-discovery.util :as util]))
+            [docker-discovery.util :as util]
+            [superstring.core :as str]))
 
 ;;;;;;;;;;;
 ;; Utils ;;
@@ -13,6 +14,10 @@
           :name (util/container-name container)
           :additional-names (util/container-additional-names container))
         (dissoc :names))))
+
+(defn- container-operation-successful? [result]
+  (and (string? result)
+       (str/blank? result)))
 
 ;;;;;;;;;;;;;
 ;; Filters ;;
@@ -31,6 +36,18 @@
    :params {:all true
             :filters (json/write-str filters)}})
 
+(defn- start-request [id]
+  {:op :ContainerStart
+   :params {:id id}})
+
+(defn- stop-request [id]
+  {:op :ContainerStop
+   :params {:id id}})
+
+(defn- restart-request [id]
+  {:op :ContainerRestart
+   :params {:id id}})
+
 ;;;;;;;;;;;;;;;
 ;; Endpoints ;;
 ;;;;;;;;;;;;;;;
@@ -47,8 +64,17 @@
            (search host)
            (first)))
 
-(defn start! [host id])
+(defn start! [host id]
+  (some->> (start-request id)
+           (docker/invoke host :containers)
+           (container-operation-successful?)))
 
-(defn stop! [host id])
+(defn stop! [host id]
+  (some->> (stop-request id)
+           (docker/invoke host :containers)
+           (container-operation-successful?)))
 
-(defn restart! [host id])
+(defn restart! [host id]
+  (some->> (restart-request id)
+           (docker/invoke host :containers)
+           (container-operation-successful?)))
