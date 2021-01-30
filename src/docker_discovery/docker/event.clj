@@ -32,23 +32,33 @@
 (defmethod handle-event :container [event host]
   (log/trace "Handling container event on host" host ":" event))
 
+(defn- listening? [host listener-id]
+  (= (get (service-context :docker-events) (keyword host)) listener-id))
+
+(defn- open-stream [host listener-id stream]
+  (with-open [rdr (io/reader stream)]
+    (log/info "Started listening for Docker events on host" (name host))
+    (loop [r (BufferedReader. rdr)]
+      (when-let [line (.readLine r)]
+        (let [event (json/read-str line :key-fn keyword)]
+          (when (map? event)
+            (handle-event (-> (util/lispy-keys event)
+                              (update :type keyword)) host))
+          (when (listening? host listener-id)
+            (recur r)))))))
+
+(defn- add-listener [host listener-id]
+  (-> (service-context :docker-events)
+      (assoc (keyword host) listener-id)))
+
 (defn listen [host]
   (if (and (cfg/get :docker :hosts (keyword host) :events)
            (not (contains? (service-context :docker-events) (keyword host))))
-    (let [stream (event-stream host)
-          listener-id (gensym "container_listener_")]
-      (future
-        (with-open [rdr (io/reader stream)]
-          (log/info "Started listening for Docker events on host" (name host))
-          (loop [r (BufferedReader. rdr)]
-            (when-let [line (.readLine r)]
-              (let [event (json/read-str line :key-fn keyword)]
-                (when (map? event)
-                  (handle-event (-> (util/lispy-keys event)
-                                    (update :type keyword)) host))
-                (when (= (get (service-context :docker-events) (keyword host)) listener-id)
-                  (recur r)))))))
-      (service-context :docker-events (assoc (service-context :docker-events) (keyword host) listener-id)))
+    (let [listener-id (gensym "container_listener_")]
+      (->> (event-stream host)
+           (open-stream host listener-id)
+           (future))
+      (service-context :docker-events (add-listener host listener-id)))
     (service-context :docker-events)))
 
 (defn unlisten [host]
