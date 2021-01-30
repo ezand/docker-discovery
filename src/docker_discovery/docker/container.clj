@@ -28,6 +28,9 @@
 (defn name-filter [container-name]
   (when container-name {:name [container-name]}))
 
+(defn running-only-filter []
+  {:status ["running"]})
+
 ;;;;;;;;;;;;;;
 ;; Requests ;;
 ;;;;;;;;;;;;;;
@@ -56,8 +59,13 @@
            (docker/invoke host :containers)
            (map assoc-names)))
 
-(defn find-all [host]
-  (search host {}))
+(defn find-all
+  ([host running-only?]
+   (if running-only?
+     (search host (running-only-filter))
+     (search host {})))
+  ([host]
+   (find-all host false)))
 
 (defn find-by-id [host id]
   (some->> (id-filter id)
