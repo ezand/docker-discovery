@@ -3,7 +3,7 @@
             [clojure.data.json :as json]
             [docker-discovery.docker.core :as docker]
             [docker-discovery.log :as log]
-            [docker-discovery.system :refer [started? service-context remove-service-context]]
+            [docker-discovery.system :refer [dissoc-in-context assoc-in-context service-context remove-service-context]]
             [medley.core :as medley]
             [omniconf.core :as cfg]
             [docker-discovery.util :as util])
@@ -47,10 +47,6 @@
           (when (listening? host listener-id)
             (recur r)))))))
 
-(defn- add-listener [host listener-id]
-  (-> (service-context :docker-events)
-      (assoc (keyword host) listener-id)))
-
 (defn listen [host]
   (if (and (cfg/get :docker :hosts (keyword host) :events)
            (not (contains? (service-context :docker-events) (keyword host))))
@@ -58,13 +54,11 @@
       (->> (event-stream host)
            (open-stream host listener-id)
            (future))
-      (service-context :docker-events (add-listener host listener-id)))
+      (assoc-in-context :docker-events [(keyword host)] listener-id))
     (service-context :docker-events)))
 
 (defn unlisten [host]
-  (let [updated (-> (service-context :docker-events)
-                    (dissoc (keyword host)))]
-    (service-context :docker-events updated)))
+  (dissoc-in-context :docker-events [(keyword host)]))
 
 (defn start []
   (doseq [host (->> (cfg/get :docker :hosts)
