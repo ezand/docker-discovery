@@ -34,6 +34,72 @@ FIXME: explanation
 | `DOCKER_<HOST>_USERNAME` | | |
 | `DOCKER_<HOST>_PASSWORD` | | |
 
+## WebSockets
+
+### Start listening for Docker events
+
+#### Request
+
+```json
+{
+  "messageId": "some-id-123",
+  "command": "start_listening"
+}
+```
+
+#### Response
+
+```json
+{
+  "messageId": "some-id-123",
+  "command": "start_listening",
+  "success": true,
+  "result": {
+    "state": {
+      "hosts": [
+        {
+          "name": "docker-host-1",
+          "attributes": {
+            "manufacturer": "Docker Inc."
+          },
+          "containers": [
+            {
+              "id": "container-id-1",
+              "name": "Docker Discovery",
+              "attributes": {
+                "state": "running",
+                "status": "Up 35 hours"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+```
+
+### Stop listening for Docker events
+
+#### Request
+
+```json
+{
+  "messageId": "some-id-321",
+  "command": "stop_listening"
+}
+```
+
+#### Response
+
+```json
+{
+  "messageId": "some-id-321",
+  "command": "stop_listening",
+  "success": true
+}
+```
+
 ## Examples
 
 ...
