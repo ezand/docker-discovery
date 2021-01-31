@@ -16,7 +16,7 @@
 (defn connect! [channel]
   (log/trace "New WebSocket channel open.")
   (assoc-in-context :websocket [channel :connected?] true)
-  (async/send! channel "Ready to reverse your messages!"))
+  (async/send! channel (json/write-str {:message "Connected!"})))
 
 (defn disconnect! [channel {:keys [code reason]}]
   (log/trace "WebSocket channel closed. Code:" code ", Reason:" reason)

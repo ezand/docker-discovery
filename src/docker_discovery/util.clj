@@ -1,10 +1,11 @@
 (ns docker-discovery.util
-  (:require [superstring.core :as str]
-            [clojure.java.io :as io]
-            [omniconf.core :as cfg]
+  (:require [clj-time.local :as l]
             [clojure.data.json :as json]
+            [clojure.java.io :as io]
+            [clojure.set :as set]
             [clojure.walk :as walk]
-            [clojure.set :as set])
+            [omniconf.core :as cfg]
+            [superstring.core :as str])
   (:import [java.util Map Map$Entry]))
 
 ;;;;;;;;;;;;;;;;;;;
@@ -152,6 +153,9 @@
         (lispy-keys* v)
         v))
     m))
+
+(defn iso-now []
+  (l/format-local-time (l/local-now) :basic-date-time))
 
 ;;;;;;;;;;;;;;;;;;
 ;; Docker utils ;;

@@ -2,11 +2,13 @@
   (:require [clojure.java.io :as io]
             [clojure.data.json :as json]
             [docker-discovery.docker.core :as docker]
+            [docker-discovery.docker.host :as host]
             [docker-discovery.log :as log]
             [docker-discovery.system :refer [dissoc-in-context assoc-in-context service-context remove-service-context]]
+            [docker-discovery.util :as util]
+            [docker-discovery.websocket.outgoing :as websocket]
             [medley.core :as medley]
-            [omniconf.core :as cfg]
-            [docker-discovery.util :as util])
+            [omniconf.core :as cfg])
   (:import [java.io BufferedReader]))
 
 ;;;;;;;;;;;;;;
@@ -29,8 +31,13 @@
 (defmulti handle-event :type)
 (defmethod handle-event :default [event host]
   (log/trace "Unhandled Docker event on host" host ":" event))
-(defmethod handle-event :container [event host]
-  (log/trace "Handling container event on host" host ":" event))
+(defmethod handle-event :container [{:keys [status] :as event} host]
+  (log/trace "Handling container event on host" host ":" event)
+  ; TODO send to MQTT if enabled
+  (when (and (util/exposure-enabled? :websocket)
+             (contains? websocket/docker-event-types (keyword status)))
+    (websocket/handle-container-event (host/info host)
+                                      (update event :status keyword))))
 
 (defn- listening? [host listener-id]
   (= (get (service-context :docker-events) (keyword host)) listener-id))
