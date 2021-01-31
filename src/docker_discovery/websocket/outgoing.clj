@@ -7,7 +7,7 @@
             [medley.core :as medley]
             [clojure.string :as str]))
 
-(def ^:const docker-event-types #{:start :stop :rename :destroy})
+(def ^:const docker-event-types #{:create :destroy :rename :start :stop :pause :unpause})
 
 (defn- listening-channels []
   (some->> (service-context :websocket)
