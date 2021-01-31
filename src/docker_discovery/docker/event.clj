@@ -36,8 +36,9 @@
   ; TODO send to MQTT if enabled
   (when (and (util/exposure-enabled? :websocket)
              (contains? websocket/docker-event-types (keyword status)))
-    (websocket/handle-container-event (host/info host)
-                                      (update event :status keyword))))
+    (websocket/handle-container-event (-> (update event :status keyword)
+                                          (assoc :local-name host))
+                                      (host/info host))))
 
 (defn- listening? [host listener-id]
   (= (get (service-context :docker-events) (keyword host)) listener-id))
