@@ -1,23 +1,31 @@
 (ns docker-discovery.websocket.core
-  (:require [docker-discovery.log :as log]
-            [docker-discovery.system :refer [started? disj-context conj-context service-context remove-service-context]]
+  (:require [clojure.data.json :as json]
+            [docker-discovery.log :as log]
+            [docker-discovery.system :refer [started? assoc-in-context dissoc-in-context remove-service-context]]
+            [docker-discovery.websocket.handlers :as handlers]
+            [docker-discovery.util :as util]
             [immutant.web.async :as async]
-            [immutant.web.middleware :refer [wrap-websocket]]
-            [docker-discovery.util :as util]))
+            [immutant.web.middleware :refer [wrap-websocket]]))
 
 (def ^:private ^:const websocket-path-regex #"^(\/ws$|\/ws\/.*$)")
 
 (defn connect! [channel]
   (log/trace "New WebSocket channel open.")
-  (conj-context :websocket channel)
+  (assoc-in-context :websocket [channel :connected?] true)
   (async/send! channel "Ready to reverse your messages!"))
 
 (defn disconnect! [channel {:keys [code reason]}]
   (log/trace "WebSocket channel closed. Code:" code ", Reason:" reason)
-  (disj-context :websocket channel))
+  (dissoc-in-context :websocket [channel]))
+
+(defn- coerce-message [message]
+  (-> (util/lispy-keys message)
+      (util/update-existing-in [:command] (comp util/->lisp-case keyword))))
 
 (defn handle-message! [channel message]
-  (async/send! channel (apply str (reverse message))))
+  (-> (json/read-str message :key-fn keyword)
+      (coerce-message)
+      (handlers/handle-message channel)))
 
 (defn handle-error [channel ex]
   (log/error "A WebSocket error occurred" ex))

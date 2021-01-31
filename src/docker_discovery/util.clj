@@ -122,6 +122,12 @@
         v))
     m))
 
+(defn ->lisp-case [k]
+  (let [key-name (name k)]
+    (keyword (if (str/starts-with? key-name "_")
+               key-name
+               (str/lisp-case key-name)))))
+
 (defn- lispy-keys*
   "Rename the keys in `m` to use the lisp-case naming convention."
   [m]
@@ -129,15 +135,10 @@
     m
     (reduce
       (fn rename-key [acc k]
-        (letfn [(->lisp-case [k]
-                  (let [key-name (name k)]
-                    (keyword (if (str/starts-with? key-name "_")
-                               key-name
-                               (str/lisp-case key-name)))))]
-          (cond
-            (keyword? k)
-            (assoc acc k (->lisp-case k))
-            :else acc)))
+        (cond
+          (keyword? k)
+          (assoc acc k (->lisp-case k))
+          :else acc))
       {}
       (keys m))))
 
