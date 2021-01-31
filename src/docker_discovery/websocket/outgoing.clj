@@ -4,24 +4,28 @@
             [docker-discovery.system :refer [service-context]]
             [docker-discovery.util :as util]
             [immutant.web.async :as async]
-            [medley.core :as medley]))
+            [medley.core :as medley]
+            [clojure.string :as str]))
 
-(def ^:const docker-event-types #{:start :stop})
+(def ^:const docker-event-types #{:start :stop :rename})
 
 (defn- listening-channels []
   (some->> (service-context :websocket)
            (medley/filter-vals :listening?)
            (keys)))
 
-(defn handle-container-event [host {:keys [status id] :as event}]
+(defn handle-container-event [host {:keys [status id actor] :as event}]
   (when (contains? docker-event-types status)
     (log/trace "WebSockets is handling container event:" event)
     (doseq [channel (listening-channels)]
       (async/send! channel (-> {:type :event
-                                :event {:source :container
-                                        :event status
-                                        :host (:id host)
-                                        :id id
-                                        :timestamp (util/iso-now)}}
+                                :event (-> {:source :container
+                                            :event status
+                                            :host (:id host)
+                                            :name (get-in actor [:attributes :name])
+                                            :id id
+                                            :timestamp (util/iso-now)}
+                                           (util/assoc-some :old-name (some-> (get-in actor [:attributes :old-name])
+                                                                              (str/replace-first "/" ""))))}
                                (util/camelize-keys)
                                (json/write-str))))))
