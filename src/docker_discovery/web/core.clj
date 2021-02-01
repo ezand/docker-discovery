@@ -32,6 +32,7 @@
     (when (util/exposure-enabled? :rest)
       (log/info "REST api is enabled."))
     (when (util/exposure-enabled? :websocket)
+      (websocket/start)
       (log/info "WebSocket support is enabled."))))
 
 (defn stop []

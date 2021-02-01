@@ -20,7 +20,7 @@
                                          (str/replace-first "/" "")))))
 
 (defn- send-event! [event object-type]
-  (log/trace "Sending container event over websocket:" event)
+  (log/trace "Sending event over websocket for object type" object-type ":" event)
   (doseq [channel (ws-util/listening-channels object-type event)]
     (async/send! channel (-> {:type :event
                               :event event}

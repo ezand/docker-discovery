@@ -22,6 +22,9 @@
             (recur (f ret (.getKey kv) (.getValue kv))))
           ret)))))
 
+(defn set-interval [callback ms]
+  (future (while true (do (Thread/sleep ms) (callback)))))
+
 (defn assoc-some
   "Like `assoc` but only if `v` is not `nil`."
   ([m k v] (if (nil? v) m (assoc m k v)))
