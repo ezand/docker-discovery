@@ -20,10 +20,12 @@
   (log/trace "Unsupported command received:" command ". Message:" message)
   (reply! channel message true {:message "Unsupported"}))
 
-(defmethod handle-message! :start-listening [message channel]
+(defmethod handle-message! :start-listening [{:keys [events] :as message} channel]
   (assoc-in-context :websocket [channel :listening?] true)
+  (assoc-in-context :websocket [channel :events] events)
   (reply! channel message true {:result (ws-util/->state)}))
 
 (defmethod handle-message! :stop-listening [message channel]
   (assoc-in-context :websocket [channel :listening?] false)
+  (dissoc-in-context :websocket [channel :events])
   (reply! channel message true {}))

@@ -43,7 +43,13 @@ FIXME: explanation
 ```json
 {
   "messageId": "some-id-123",
-  "command": "start_listening"
+  "command": "start_listening",
+  "events": {
+    "container": {
+      "start": true,
+      "stop": true
+    }
+  }
 }
 ```
 
