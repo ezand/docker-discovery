@@ -1,10 +1,12 @@
 (ns docker-discovery.mqtt.core
   (:require [clojurewerkz.machine-head.client :as client]
             [docker-discovery.log :as log]
-            [docker-discovery.system :refer [started? service-context remove-service-context]]
+            [docker-discovery.system :refer [started? assoc-in-context dissoc-in-context
+                                             service-context remove-service-context]]
             [docker-discovery.util :as util]
             [omniconf.core :as cfg])
-  (:import [org.eclipse.paho.client.mqttv3 IMqttClient]))
+  (:import [org.eclipse.paho.client.mqttv3 IMqttClient]
+           [java.util.concurrent TimeUnit]))
 
 (defn- connect
   "Connect to the MQTT Broker."
@@ -25,16 +27,29 @@
     (client/disconnect-and-close client)
     (log/debug "MQTT client" (.getClientId client) "is disconnected from broker" (cfg/get :mqtt :uri))))
 
+(defn refresh-state! []
+  (let [state {}]
+    ; TODO
+    (log/trace "State refreshed and sent to MQTT")))
+
 (defn start []
   (when-not (started? :mqtt)
     (->> (connect)
          (service-context :mqtt))
+    (when-let [refresh-interval-seconds (cfg/get :mqtt :refresh)]
+      (->> (util/set-interval refresh-state! (.toMillis (TimeUnit/SECONDS) refresh-interval-seconds))
+           (assoc-in-context :refresh-jobs [:mqtt]))
+      (log/info "Scheduled a state refresh every" refresh-interval-seconds "second(s) to be sent to MQTT"))
     (log/info "MQTT service has started.")))
 
 (defn stop []
   (when (started? :mqtt)
+    (some-> (service-context :refresh-jobs)
+            :mqtt
+            (future-cancel))
+    (dissoc-in-context :refresh-jobs [:mqtt])
+
     (-> (service-context :mqtt)
         (disconnect))
-
     (remove-service-context :mqtt)
     (log/info "MQTT service has stopped.")))

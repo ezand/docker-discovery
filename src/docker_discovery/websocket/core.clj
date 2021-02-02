@@ -41,7 +41,9 @@
    :on-message handle-message!
    :on-error handle-error})
 
-(defn wrap-ws [handler]
+(defn wrap-ws
+  "Ring handler to wrap a websocket request."
+  [handler]
   (fn [{:keys [uri] :as request}]
     (if (and (util/exposure-enabled? :websocket)
              (re-matches websocket-path-regex uri))
@@ -57,7 +59,8 @@
     (doseq [channel (ws-util/listening-channels :state :state-refresh)]
       (async/send! channel (-> state
                                (util/camelize-keys)
-                               (json/write-str))))))
+                               (json/write-str)))
+      (log/trace "State refreshed and sent to listening websocket clients"))))
 
 (defn start []
   (when-not (started? :websocket)
