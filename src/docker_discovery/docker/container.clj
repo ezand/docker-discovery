@@ -2,7 +2,8 @@
   (:require [clojure.data.json :as json]
             [docker-discovery.docker.core :as docker]
             [docker-discovery.util :as util]
-            [superstring.core :as str]))
+            [superstring.core :as str]
+            [docker-discovery.log :as log]))
 
 ;;;;;;;;;;;
 ;; Utils ;;
@@ -73,16 +74,19 @@
            (first)))
 
 (defn start! [host id]
+  (log/trace "Starting container" id "on host" (name host))
   (some->> (start-request id)
            (docker/invoke host :containers)
            (container-operation-successful?)))
 
 (defn stop! [host id]
+  (log/trace "Stopping container" id "on host" (name host))
   (some->> (stop-request id)
            (docker/invoke host :containers)
            (container-operation-successful?)))
 
 (defn restart! [host id]
+  (log/trace "Restarting container" id "on host" (name host))
   (some->> (restart-request id)
            (docker/invoke host :containers)
            (container-operation-successful?)))

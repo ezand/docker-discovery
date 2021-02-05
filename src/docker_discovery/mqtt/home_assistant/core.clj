@@ -28,7 +28,7 @@
   (->> ["homeassistant"
         (str "docker_" (name host))
         container-name
-        (name id)]
+        id]
        (str/join "/")))
 
 (defmethod mqtt-util/topic :home-assistant-attributes
@@ -36,7 +36,7 @@
   (->> ["homeassistant"
         (str "docker_" (name host))
         container-name
-        (name id)
+        id
         "attributes"]
        (str/join "/")))
 
@@ -45,7 +45,7 @@
   (->> ["homeassistant"
         (str "docker_" (name host))
         container-name
-        (name id)
+        id
         "set"]
        (str/join "/")))
 
