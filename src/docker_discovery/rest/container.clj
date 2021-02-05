@@ -10,6 +10,11 @@
                                (docker-container/find-all host)
                                (util/trim-to-empty)))))
 
-  (GET "/:container-id" [host container-id]
-    (when (util/docker-host-configured? host)
-      (util/json-response (docker-container/find-by-id host container-id)))))
+  (context "/:container-id" [_]
+    (GET "/" [host container-id]
+      (when (util/docker-host-configured? host)
+        (util/json-response (docker-container/find-by-id host container-id))))
+
+    (GET "/stats" [host container-id]
+      (when (util/docker-host-configured? host)
+        (util/json-response (docker-container/stats host container-id))))))

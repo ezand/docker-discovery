@@ -1,9 +1,11 @@
 (ns docker-discovery.docker.container
   (:require [clojure.data.json :as json]
+            [clojure.java.io :as io]
             [docker-discovery.docker.core :as docker]
+            [docker-discovery.log :as log]
             [docker-discovery.util :as util]
-            [superstring.core :as str]
-            [docker-discovery.log :as log]))
+            [superstring.core :as str])
+  (:import [java.io BufferedReader]))
 
 ;;;;;;;;;;;
 ;; Utils ;;
@@ -19,6 +21,11 @@
 (defn- container-operation-successful? [result]
   (and (string? result)
        (str/blank? result)))
+
+(defn- read-stats-snapshot [stream]
+  (with-open [rdr (io/reader stream)]
+    (when-let [line (.readLine (BufferedReader. rdr))]
+      (json/read-str line :key-fn keyword))))
 
 ;;;;;;;;;;;;;
 ;; Filters ;;
@@ -39,6 +46,11 @@
   {:op :ContainerList
    :params {:all true
             :filters (json/write-str filters)}})
+
+(defn- stats-request [id]
+  {:op :ContainerStats
+   :params {:id id}
+   :as :stream})
 
 (defn- start-request [id]
   {:op :ContainerStart
@@ -72,6 +84,11 @@
   (some->> (id-filter id)
            (search host)
            (first)))
+
+(defn stats [host id]
+  (some->> (stats-request id)
+           (docker/invoke host :containers)
+           (read-stats-snapshot)))
 
 (defn start! [host id]
   (log/trace "Starting container" id "on host" (name host))
