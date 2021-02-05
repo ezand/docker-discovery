@@ -8,11 +8,11 @@
                            :username "user"
                            :password "passwd"}}}
  :web {:port 3000}
- :websocket {:refresh 300}
+ :websocket {:refresh 3600}
  :mqtt {:uri "tcp://192.168.0.2:1883"
         :refresh 300
         :username "user"
         :password "pass"
-        :platforms #{:home-assistant}}
+        :platforms #{:homeassistant}}
  :rest {:username "user"
         :pass "pass"}}

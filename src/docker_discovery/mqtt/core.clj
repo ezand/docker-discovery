@@ -39,12 +39,12 @@
   (when-let [mqtt-client (service-context :mqtt)]
     (let [{:keys [configuration attributes state]} (->> (mqtt-util/->state)
                                                         (group-by :type))]
-      (doseq [{:keys [topic payload]} attributes]
-        (client/publish mqtt-client topic (json/write-str payload :escape-slash false) 0 true))
-      (doseq [{:keys [topic payload]} state]
-        (client/publish mqtt-client topic (json/write-str payload :escape-slash false) 0 true))
-      (doseq [{:keys [topic payload]} configuration]
-        (client/publish mqtt-client topic (json/write-str payload :escape-slash false) 0 true))
+      (future (do (doseq [{:keys [topic payload]} attributes]
+                    (client/publish mqtt-client topic (json/write-str payload :escape-slash false) 0 true))
+                  (doseq [{:keys [topic payload]} state]
+                    (client/publish mqtt-client topic (json/write-str payload :escape-slash false) 0 true))
+                  (doseq [{:keys [topic payload]} configuration]
+                    (client/publish mqtt-client topic (json/write-str payload :escape-slash false) 0 true))))
       (log/trace "State refreshed and sent to MQTT"))))
 
 (defn- handle-command [^String topic
@@ -62,12 +62,13 @@
                                      (host/ping host))
                               (util/trim-to-nil))
                 device* (mqtt-util/device platform host host-info)
-                container* {:id container-id :name container-name}
+                container* {:id container-id :name container-name :state (util/boolean->container-state command-value)}
                 state-topic (mqtt-util/switch-state-topic platform host container*)
                 state-payload (mqtt-util/switch-state-payload platform host device* container*)]
-            (client/publish mqtt-client state-topic (json/write-str state-payload :escape-slash false) 0 true)))))))
+            (future (client/publish mqtt-client state-topic (json/write-str state-payload :escape-slash false) 0 true))
+            (log/trace "Published MQTT state for container" container-id "on host" (name host))))))))
 
-(def ^:private ^:const command-topic "homeassistant/+/+/+/set")
+(def ^:private ^:const command-topic "+/+/+/+/set")
 
 (defn- start-listening-for-commands []
   (when-let [mqtt-client (service-context :mqtt)]

@@ -26,9 +26,9 @@
   (->> (cfg/get :mqtt :platforms)
        (reduce (fn [entities platform]
                  (let [device* (device platform host host-info)
-                       switch-attributes-topic (topic :home-assistant :attributes :switch host container*)
+                       switch-attributes-topic (topic :homeassistant :attributes :switch host container*)
                        switch-state-topic* (switch-state-topic platform host container*)
-                       switch-command-topic (topic :home-assistant :command :switch host container*)
+                       switch-command-topic (topic :homeassistant :command :switch host container*)
                        switch-configuration-topic (topic platform :configuration :switch host container*)]
                    (conj entities
                          {:type :configuration
