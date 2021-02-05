@@ -8,6 +8,10 @@
   (:import [org.eclipse.paho.client.mqttv3 IMqttClient]
            [java.util.concurrent TimeUnit]))
 
+;; Want this loaded, even if it isn't used in this ns. By putting it
+;; here it isn't subject to automatic cleanup of the ns form
+(require 'docker-discovery.mqtt.home-assistant.core)
+
 (defn- connect
   "Connect to the MQTT Broker."
   []

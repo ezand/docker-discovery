@@ -12,6 +12,7 @@
  :mqtt {:uri "tcp://192.168.0.2:1883"
         :refresh 300
         :username "user"
-        :password "pass"}
+        :password "pass"
+        :platforms #{:home-assistant}}
  :rest {:username "user"
         :pass "pass"}}

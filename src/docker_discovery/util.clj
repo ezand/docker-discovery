@@ -163,6 +163,16 @@
 ;;;;;;;;;;;;;;;;;;
 ;; Docker utils ;;
 ;;;;;;;;;;;;;;;;;;
+(defn docker-host-configured? [host]
+  (cfg/get :docker :hosts (keyword host)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Docker container utils ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(def ^:private ^:const container-label-prefix "dockerdiscovery.")
+(def ^:private ^:const container-label-website (str container-label-prefix "website"))
+(def ^:private ^:const container-running-state "running")
+
 (defn container-name [{:keys [names]}]
   (some-> (first names)
           (str/replace-first "/" "")))
@@ -171,8 +181,11 @@
   (some->> (rest names)
            (map #(str/replace-first % "/" ""))))
 
-(defn docker-host-configured? [host]
-  (cfg/get :docker :hosts (keyword host)))
+(defn container-website [{:keys [labels] :as container}]
+  (get labels container-label-website))
+
+(defn container-running? [{:keys [State]}]
+  (= (some-> State str/lower-case?) container-running-state))
 
 ;;;;;;;;;;;;;;;
 ;; Web utils ;;

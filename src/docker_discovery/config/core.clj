@@ -26,7 +26,8 @@
                    :username {:type :string}
                    :password {:type :string
                               :secret true}
-                   :refresh {:type :number}}}})
+                   :refresh {:type :number}
+                   :platforms {:type :edn}}}})
 
 (def ^:private ^:const default-config-file-location "/etc/docker-discovery/config.edn")
 

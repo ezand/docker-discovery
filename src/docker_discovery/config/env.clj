@@ -18,6 +18,7 @@
 (def ^:const MQTT_USERNAME "MQTT_USERNAME")
 (def ^:const MQTT_PASSWORD "MQTT_PASSWORD")
 (def ^:const MQTT_REFRESH "MQTT_REFRESH")
+(def ^:const MQTT_PLATFORMS "MQTT_PLATFORMS")
 (def ^:const WEBSOCKET_REFRESH "WEBSOCKET_REFRESH")
 
 ;;;;;;;;;;;;;;;;;;;
@@ -89,8 +90,13 @@
 
 (defn- docker-exposure []
   (some-> (str-value DOCKER_EXPOSURE)
-          (str)
-          (str/trim)
+          (str/split #",\s*")
+          (keywordize-all)
+          (set)
+          (util/trim-to-nil)))
+
+(defn- mqtt-platforms []
+  (some-> (str-value MQTT_PLATFORMS)
           (str/split #",\s*")
           (keywordize-all)
           (set)
@@ -112,6 +118,7 @@
       (util/assoc-some :uri (str-value MQTT_URI))
       (util/assoc-some :username (str-value MQTT_USERNAME))
       (util/assoc-some :password (str-value MQTT_PASSWORD))
+      (util/assoc-some :platforms (mqtt-platforms))
       (merge-defaults mqtt-defaults)
       (util/trim-to-nil)))
 
