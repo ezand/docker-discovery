@@ -4,6 +4,7 @@
             [docker-discovery.docker.core :as docker]
             [docker-discovery.docker.host :as host]
             [docker-discovery.log :as log]
+            [docker-discovery.mqtt.core :as mqtt]
             [docker-discovery.system :refer [dissoc-in-context assoc-in-context service-context remove-service-context]]
             [docker-discovery.util :as util]
             [docker-discovery.websocket.outgoing :as websocket]
@@ -33,12 +34,18 @@
   (log/trace "Unhandled Docker event on host" host ":" event))
 (defmethod handle-event :container [{:keys [status] :as event} host]
   (log/trace "Handling container event on host" host ":" event)
-  ; TODO send to MQTT if enabled
-  (when (and (util/exposure-enabled? :websocket)
-             (contains? websocket/docker-event-types (keyword status)))
-    (websocket/handle-container-event (-> (update event :status keyword)
-                                          (assoc :local-name host))
-                                      (host/info host))))
+
+  (when (not-empty (cfg/get :docker-exposure))
+    (let [event* (-> (update event :status keyword)
+                     (assoc :local-name host))
+          host-info (host/info host)]
+      (when (and (util/exposure-enabled? :mqtt)
+                 (contains? mqtt/docker-event-types (keyword status)))
+        (mqtt/handle-container-event event* host-info))
+
+      (when (and (util/exposure-enabled? :websocket)
+                 (contains? websocket/docker-event-types (keyword status)))
+        (websocket/handle-container-event event* host-info)))))
 
 (defn- listening? [host listener-id]
   (= (get (service-context :docker-events) (keyword host)) listener-id))

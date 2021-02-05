@@ -188,7 +188,7 @@
   (= (some-> state str/lower-case?) container-running-state))
 
 (defn boolean->container-state [value]
-  (if value container-running-state nil))
+  (if value :start :stop))
 
 ;;;;;;;;;;;;;;;
 ;; Web utils ;;

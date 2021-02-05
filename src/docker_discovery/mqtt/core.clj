@@ -1,14 +1,13 @@
 (ns docker-discovery.mqtt.core
-  (:require [clojurewerkz.machine-head.client :as client]
+  (:require [clojure.data.json :as json]
+            [clojurewerkz.machine-head.client :as client]
+            [docker-discovery.docker.container :as container]
             [docker-discovery.log :as log]
             [docker-discovery.mqtt.util :as mqtt-util]
             [docker-discovery.system :refer [started? assoc-in-context dissoc-in-context
                                              service-context remove-service-context]]
             [docker-discovery.util :as util]
-            [omniconf.core :as cfg]
-            [clojure.data.json :as json]
-            [docker-discovery.docker.container :as container]
-            [docker-discovery.docker.host :as host])
+            [omniconf.core :as cfg])
   (:import [org.eclipse.paho.client.mqttv3 IMqttClient]
            [java.util.concurrent TimeUnit]))
 
@@ -47,26 +46,35 @@
                     (client/publish mqtt-client topic (json/write-str payload :escape-slash false) 0 true))))
       (log/trace "State refreshed and sent to MQTT"))))
 
+;;;;;;;;;;;;;;;;;;;
+;; Docker Events ;;
+;;;;;;;;;;;;;;;;;;;
+(def ^:const docker-event-types #{:create :destroy :rename :start :stop :pause :unpause})
+
+(defmulti handle-container-event :status)
+
+(defmethod handle-container-event :default [{:keys [status local-name id actor] :as event} host-info]
+  (when (#{:start :stop} status)
+    (let [container-name (get-in actor [:attributes :name])]
+      (doseq [platform (cfg/get :mqtt :platforms)]
+        (mqtt-util/publish-switch-state-update platform local-name container-name id status)))))
+
+; TODO handle more event statuses
+
+;;;;;;;;;;;;;;;;;
+;; MQTT Events ;;
+;;;;;;;;;;;;;;;;;
 (defn- handle-command [^String topic
                        {:keys [retained qos duplicate?]}
                        ^bytes payload]
-  (when-let [mqtt-client (service-context :mqtt)]
-    (when-some [command-value (mqtt-util/parse-command-value payload)]
-      (let [{:keys [platform host container-name container-id]} (mqtt-util/parse-command-topic topic)
-            operation-successful? (if command-value
-                                    (container/start! host container-id)
-                                    (container/stop! host container-id))]
-        (when operation-successful?
-          (let [host-info (-> (merge (host/info host)
-                                     (host/version host)
-                                     (host/ping host))
-                              (util/trim-to-nil))
-                device* (mqtt-util/device platform host host-info)
-                container* {:id container-id :name container-name :state (util/boolean->container-state command-value)}
-                state-topic (mqtt-util/switch-state-topic platform host container*)
-                state-payload (mqtt-util/switch-state-payload platform host device* container*)]
-            (future (client/publish mqtt-client state-topic (json/write-str state-payload :escape-slash false) 0 true))
-            (log/trace "Published MQTT state for container" container-id "on host" (name host))))))))
+  (when-some [command-value (mqtt-util/parse-command-value payload)]
+    (let [{:keys [platform host container-name container-id]} (mqtt-util/parse-command-topic topic)
+          operation-successful? (if command-value
+                                  (container/start! host container-id)
+                                  (container/stop! host container-id))]
+      (when operation-successful?
+        (mqtt-util/publish-switch-state-update platform host container-name container-id
+                                               (util/boolean->container-state command-value))))))
 
 (def ^:private ^:const command-topic "+/+/+/+/set")
 

@@ -32,8 +32,10 @@
 (defmethod handle-container-event :default [event host]
   (send-event! (->event event host) :container))
 
-(defmethod handle-container-event :create [{:keys [local-name id] :as event} host]
+(defmethod handle-container-event :create [{:keys [local-name id] :as event} host-info]
   (-> (dissoc event :local-name)
-      (->event host)
+      (->event host-info)
       (merge (ws-util/->state local-name id))
       (send-event! :container)))
+
+; TODO handle more event statuses
