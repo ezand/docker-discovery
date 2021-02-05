@@ -85,6 +85,11 @@
            (search host)
            (first)))
 
+(defn find-by-name [host name]
+  (some->> (name-filter name)
+           (search host)
+           (first)))
+
 (defn stats [host id]
   (some->> (stats-request id)
            (docker/invoke host :containers)
