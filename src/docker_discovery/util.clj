@@ -184,8 +184,8 @@
 (defn container-website [{:keys [labels] :as container}]
   (get labels container-label-website))
 
-(defn container-running? [{:keys [State]}]
-  (= (some-> State str/lower-case?) container-running-state))
+(defn container-running? [{:keys [state]}]
+  (= (some-> state str/lower-case?) container-running-state))
 
 ;;;;;;;;;;;;;;;
 ;; Web utils ;;

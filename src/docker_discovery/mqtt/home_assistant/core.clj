@@ -19,7 +19,7 @@
   (->> ["homeassistant"
         (name entity-type)
         (str "docker_" (name host))
-        (name container-name)
+        container-name
         "config"]
        (str/join "/")))
 
@@ -27,7 +27,7 @@
   [_ _ _ host {id :id container-name :name}]
   (->> ["homeassistant"
         (str "docker_" (name host))
-        (:name container-name)
+        container-name
         (name id)]
        (str/join "/")))
 
@@ -35,7 +35,7 @@
   [_ _ _ host {id :id container-name :name}]
   (->> ["homeassistant"
         (str "docker_" (name host))
-        (name container-name)
+        container-name
         (name id)
         "attributes"]
        (str/join "/")))
@@ -44,7 +44,7 @@
   [_ _ _ host {id :id container-name :name}]
   (->> ["homeassistant"
         (str "docker_" (name host))
-        (name container-name)
+        container-name
         (name id)
         "set"]
        (str/join "/")))

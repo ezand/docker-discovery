@@ -1,10 +1,12 @@
 (ns docker-discovery.mqtt.core
   (:require [clojurewerkz.machine-head.client :as client]
             [docker-discovery.log :as log]
+            [docker-discovery.mqtt.util :as mqtt-util]
             [docker-discovery.system :refer [started? assoc-in-context dissoc-in-context
                                              service-context remove-service-context]]
             [docker-discovery.util :as util]
-            [omniconf.core :as cfg])
+            [omniconf.core :as cfg]
+            [clojure.data.json :as json])
   (:import [org.eclipse.paho.client.mqttv3 IMqttClient]
            [java.util.concurrent TimeUnit]))
 
@@ -32,14 +34,22 @@
     (log/debug "MQTT client" (.getClientId client) "is disconnected from broker" (cfg/get :mqtt :uri))))
 
 (defn refresh-state! []
-  (let [state {}]
-    ; TODO
-    (log/trace "State refreshed and sent to MQTT")))
+  (when-let [mqtt-client (service-context :mqtt)]
+    (let [{:keys [configuration attributes state]} (->> (mqtt-util/->state)
+                                                        (group-by :type))]
+      (doseq [{:keys [type topic payload]} attributes]
+        (client/publish mqtt-client topic (json/write-str payload :escape-slash false) 0 true))
+      (doseq [{:keys [type topic payload]} state]
+        (client/publish mqtt-client topic (json/write-str payload :escape-slash false) 0 true))
+      (doseq [{:keys [type topic payload]} configuration]
+        (client/publish mqtt-client topic (json/write-str payload :escape-slash false) 0 true))
+      (log/trace "State refreshed and sent to MQTT"))))
 
 (defn start []
   (when-not (started? :mqtt)
     (->> (connect)
          (service-context :mqtt))
+    (refresh-state!)
     (when-let [refresh-interval-seconds (cfg/get :mqtt :refresh)]
       (->> (util/set-interval refresh-state! (.toMillis (TimeUnit/SECONDS) refresh-interval-seconds))
            (assoc-in-context :refresh-jobs [:mqtt]))

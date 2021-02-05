@@ -46,7 +46,7 @@
     (some->> (container/find-all host*)
              (mapcat (partial ->container-messages host* host-info)))))
 
-(defn- ->state []
+(defn ->state []
   (some->> (cfg/get :docker :hosts)
            (keys)
            (mapcat ->host-messages)
