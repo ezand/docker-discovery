@@ -1,0 +1,6 @@
+steps:
+  - uses: actions/checkout@v1
+  - uses: DeLaGuardo/clojure-lint-action@master
+    with:
+      clj-kondo-args: --lint src --config '{:output {:pattern "::{{level}} file={{filename}},line={{row}},col={{col}}::{{message}}"}}'
+      github_token: ${{ secrets.GITHUB_TOKEN }}

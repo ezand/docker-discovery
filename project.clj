@@ -19,4 +19,6 @@
                  [superstring "3.0.0"]]
   :main ^:skip-aot docker-discovery.core
   :target-path "target/%s"
-  :profiles {:uberjar {:aot :all}})
+  :profiles {:dev {:dependencies [[clj-kondo "2020.10.10" :exclusions [org.clojure/clojure]]]}
+             :uberjar {:aot :all}}
+  :aliases {"lint" ["run" "-m" "clj-kondo.main" "--lint" "src"]})
