@@ -1,5 +1,5 @@
 (ns docker-discovery.rest.core
-  (:require [compojure.core :refer :all]
+  (:require [compojure.core :refer [defroutes GET context]]
             [docker-discovery.rest.container :as container]
             [docker-discovery.rest.health :as health]
             [docker-discovery.rest.host :as host]

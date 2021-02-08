@@ -4,7 +4,7 @@
             [superstring.core :as str]))
 
 (defmethod mqtt-util/device :homeassistant
-  [_ host {:keys [id version] :as host-info}]
+  [_ host {:keys [id version]}]
   {:identifiers [id],
    :manufacturer "Docker, Inc.",
    :model "Docker",
@@ -75,7 +75,7 @@
       (util/assoc-some :website (util/container-website container*))))
 
 (defmethod mqtt-util/payload :homeassistant-state
-  [_ _ host entity-type _ {container-name :name :as container*} _ _ _ {:keys [help-text] :as args}]
+  [_ _ host entity-type _ {container-name :name :as container*} _ _ _ {:keys [help-text]}]
   {:genre "user",
    :is_polled false,
    :lastUpdate (System/currentTimeMillis),

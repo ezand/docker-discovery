@@ -38,12 +38,12 @@
   (when-let [mqtt-client (service-context :mqtt)]
     (let [{:keys [configuration attributes state]} (->> (mqtt-util/->state)
                                                         (group-by :type))]
-      (future (do (doseq [{:keys [topic payload]} attributes]
-                    (client/publish mqtt-client topic (json/write-str payload :escape-slash false) 0 true))
-                  (doseq [{:keys [topic payload]} state]
-                    (client/publish mqtt-client topic (json/write-str payload :escape-slash false) 0 true))
-                  (doseq [{:keys [topic payload]} configuration]
-                    (client/publish mqtt-client topic (json/write-str payload :escape-slash false) 0 true))))
+      (future (doseq [{:keys [topic payload]} attributes]
+                (client/publish mqtt-client topic (json/write-str payload :escape-slash false) 0 true))
+              (doseq [{:keys [topic payload]} state]
+                (client/publish mqtt-client topic (json/write-str payload :escape-slash false) 0 true))
+              (doseq [{:keys [topic payload]} configuration]
+                (client/publish mqtt-client topic (json/write-str payload :escape-slash false) 0 true)))
       (log/trace "State refreshed and sent to MQTT"))))
 
 ;;;;;;;;;;;;;;;;;;;
@@ -53,7 +53,7 @@
 
 (defmulti handle-container-event :status)
 
-(defmethod handle-container-event :default [{:keys [status local-name id actor] :as event} host-info]
+(defmethod handle-container-event :default [{:keys [status local-name id actor]} _]
   (when (#{:start :stop} status)
     (let [container-name (get-in actor [:attributes :name])]
       (doseq [platform (cfg/get :mqtt :platforms)]
@@ -65,6 +65,7 @@
 ;; MQTT Events ;;
 ;;;;;;;;;;;;;;;;;
 (defn- handle-command [^String topic
+                       #_{:clj-kondo/ignore [:unused-binding]}
                        {:keys [retained qos duplicate?]}
                        ^bytes payload]
   (when-some [command-value (mqtt-util/parse-command-value payload)]

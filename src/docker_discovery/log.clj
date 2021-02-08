@@ -16,10 +16,10 @@
     :error (.setLevel logger Level/ERROR)
     :warn (.setLevel logger Level/WARN)))
 
-(defmacro with-logging-context [context & body]
+(defmacro with-logging-context
   "Use this to add a map to any logging wrapped in the macro. Macro can be nested.
-  (with-logging-context {:key \"value\"} (log/info \"yay\"))
-  "
+  (with-logging-context {:key \"value\"} (log/info \"yay\"))"
+  [context & body]
   `(let [wrapped-context# ~context
          ctx# (MDC/getCopyOfContextMap)]
      (try

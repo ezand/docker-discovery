@@ -24,7 +24,7 @@
     (System/gc)
     (log/info "Docker Discovery has stopped.")))
 
-(defn start [& args]
+(defn start []
   (when-not (started?)
     (add-shutdown-hook stop)
     (config/load-config)
@@ -46,5 +46,5 @@
 
 (defn -main
   "Main entrypoint that's run on application startup."
-  [& args]
-  (start args))
+  [& _]
+  (start))

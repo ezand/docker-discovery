@@ -31,7 +31,7 @@
       (coerce-message)
       (incoming-handlers/handle-message! channel)))
 
-(defn handle-error [channel ex]
+(defn handle-error [_ ex]
   (log/error "A WebSocket error occurred" ex))
 
 (def websocket-callbacks

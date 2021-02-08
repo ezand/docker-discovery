@@ -1,5 +1,5 @@
 (ns docker-discovery.rest.health
-  (:require [compojure.core :refer :all]
+  (:require [compojure.core :refer [defroutes GET]]
             [docker-discovery.util :as util]
             [docker-discovery.system :refer [service-context]]
             [omniconf.core :as cfg]))

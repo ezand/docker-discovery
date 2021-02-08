@@ -1,7 +1,6 @@
 (ns docker-discovery.websocket.outgoing
   (:require [clojure.data.json :as json]
             [docker-discovery.log :as log]
-            [docker-discovery.system :refer [service-context]]
             [docker-discovery.util :as util]
             [docker-discovery.websocket.util :as ws-util]
             [immutant.web.async :as async]
@@ -9,7 +8,7 @@
 
 (def ^:const docker-event-types #{:create :destroy :rename :start :stop :pause :unpause})
 
-(defn- ->event [{:keys [status id actor] :as event} host]
+(defn- ->event [{:keys [status id actor]} host]
   (-> {:source :container
        :event status
        :host (:id host)

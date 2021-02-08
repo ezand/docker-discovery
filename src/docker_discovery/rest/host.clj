@@ -1,5 +1,5 @@
 (ns docker-discovery.rest.host
-  (:require [compojure.core :refer :all]
+  (:require [compojure.core :refer [defroutes GET]]
             [docker-discovery.docker.host :as docker-host]
             [docker-discovery.util :as util]))
 

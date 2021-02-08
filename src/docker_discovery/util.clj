@@ -1,5 +1,6 @@
 (ns docker-discovery.util
   (:require [clj-time.local :as l]
+            [clojure.core.protocols :as proto]
             [clojure.data.json :as json]
             [clojure.java.io :as io]
             [clojure.set :as set]
@@ -12,7 +13,7 @@
 ;; General utils ;;
 ;;;;;;;;;;;;;;;;;;;
 ; implement custom reduce-kv implementation for (System/getenv) UnmodifiableMap
-(extend-protocol clojure.core.protocols/IKVReduce
+(extend-protocol proto/IKVReduce
   Map
   (kv-reduce [m f init]
     (let [iter (.. m entrySet iterator)]
@@ -51,7 +52,7 @@
   "Dissociates an entry from a nested associative structure returning a new
   nested structure. keys is a sequence of keys. Any empty maps that result
   will not be present in the new structure."
-  [m [k & ks :as keys]]
+  [m [k & ks]]
   (if ks
     (if-let [nextmap (get m k)]
       (let [newmap (dissoc-in nextmap ks)]
@@ -181,7 +182,7 @@
   (some->> (rest names)
            (map #(str/replace-first % "/" ""))))
 
-(defn container-website [{:keys [labels] :as container}]
+(defn container-website [{:keys [labels]}]
   (get labels container-label-website))
 
 (defn container-running? [{:keys [state]}]

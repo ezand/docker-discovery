@@ -1,5 +1,5 @@
 (ns docker-discovery.web.core
-  (:require [compojure.core :refer :all]
+  (:require [compojure.core :refer [defroutes GET context]]
             [compojure.route :as route]
             [docker-discovery.util :as util]
             [docker-discovery.log :as log]
@@ -9,7 +9,7 @@
             [docker-discovery.websocket.core :as websocket]
             [immutant.web :as web]
             [omniconf.core :as cfg]
-            [ring.middleware.defaults :refer :all]))
+            [ring.middleware.defaults :refer [wrap-defaults site-defaults]]))
 
 (defroutes app
   (GET "/" [] (util/json-response {:message "Welcome to Docker Discovery!"}))
