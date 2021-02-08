@@ -1,4 +1,5 @@
 # docker-discovery
+![lint status](https://github.com/ezand/docker-discovery/workflows/lint/badge.svg)
 
 FIXME: description
 
