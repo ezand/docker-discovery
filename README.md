@@ -9,7 +9,7 @@
   &nbsp;&nbsp;<img height="40" src="https://github.com/ezand/docker-discovery/raw/main/doc/docker.png" />
   &nbsp;&nbsp;<img height="40" src="https://raw.githubusercontent.com/ezand/docker-discovery/main/doc/mqtt.svg" />
   &nbsp;&nbsp;<img height="40" src="https://github.com/ezand/docker-discovery/raw/main/doc/websockets.png" />
-  &nbsp;&nbsp;<img height="40" src="https://raw.githubusercontent.com/ezand/docker-discovery/main/doc/homeassistant.svg" />
+  &nbsp;&nbsp;<img height="40" src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Home_Assistant_Logo.svg" />
 </div>
 
 # Work in progress
@@ -156,6 +156,4 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-## Bugs
-
-...
+<a href="https://www.buymeacoffee.com/ezand" target="_blank"><img height="40" src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" /></a>
