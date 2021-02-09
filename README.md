@@ -9,6 +9,7 @@
   &nbsp;&nbsp;<img height="40" src="https://github.com/ezand/docker-discovery/raw/main/doc/docker.png" />
   &nbsp;&nbsp;<img height="40" src="https://raw.githubusercontent.com/ezand/docker-discovery/main/doc/mqtt.svg" />
   &nbsp;&nbsp;<img height="40" src="https://github.com/ezand/docker-discovery/raw/main/doc/websockets.png" />
+  &nbsp;&nbsp;<img height="40" src="https://raw.githubusercontent.com/ezand/docker-discovery/main/doc/homeassistant.svg" />
 </div>
 
 # Work in progress
@@ -16,12 +17,16 @@
 ## Features
 * Run in [Docker](https://www.docker.com/)
 * Run as standalone [Clojure](https://clojure.org/) app
+* Supports [local](https://stackoverflow.com/a/40007244/655296) or [remote Docker API](https://blog.usejournal.com/how-to-enable-docker-remote-api-on-docker-host-7b73bd3278c6)
 * Fully configurable
+  * Configure multiple Docker hosts
+  * Disable / enable many aspect of the discovery
+  * Supports config-file or environment variables configuration
 * REST API
 * Receive Docker [events](https://docs.docker.com/engine/reference/commandline/events/)
   * Through [WebSockets](https://en.wikipedia.org/wiki/WebSocket)
   * Through [MQTT](https://mqtt.org/)
-* Start/stop Docker containers
+* Start / stop Docker containers
 * [HomeAssistant MQTT discovery](https://www.home-assistant.io/docs/mqtt/discovery/) compatible
 
 ## Installation
