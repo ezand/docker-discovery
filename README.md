@@ -3,6 +3,7 @@
 </p>
 
 ![lint status](https://github.com/ezand/docker-discovery/workflows/lint/badge.svg)
+![build status](https://github.com/ezand/docker-discovery/workflows/build/badge.svg)
 
 <div align="center">
   <a target="_blank" href="https://clojure.org/"><img height="40" src="https://raw.githubusercontent.com/ezand/docker-discovery/main/doc/clojure.svg" /></a>
