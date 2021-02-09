@@ -24,38 +24,65 @@
 * [HomeAssistant MQTT discovery](https://www.home-assistant.io/docs/mqtt/discovery/) compatible
 * Docker container attributes available as entity attributes in HomeAssistant.
 
-## Technologies
-
-<a target="_blank" href="https://clojure.org/"><img height="40" src="https://raw.githubusercontent.com/ezand/docker-discovery/main/doc/clojure.svg" /></a>
-&nbsp;&nbsp;<a target="_blank" href="https://www.docker.com/"><img height="40" src="https://github.com/ezand/docker-discovery/raw/main/doc/docker.png" /></a>
-&nbsp;&nbsp;<a target="_blank" href="https://mqtt.org/"><img height="40" src="https://raw.githubusercontent.com/ezand/docker-discovery/main/doc/mqtt.svg" /></a>
-&nbsp;&nbsp;<a target="_blank" href="https://en.wikipedia.org/wiki/WebSocket"><img height="40" src="https://github.com/ezand/docker-discovery/raw/main/doc/websockets.png" /></a>
-&nbsp;&nbsp;<a target="_blank" href="https://www.home-assistant.io/docs/mqtt/discovery/"><img height="40" src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Home_Assistant_Logo.svg" /></a>
-
 ## Installation
 
 ## Configuration
 
-### Environment variables
-| Name | Default | Description |
-|------|---------|-------------|
-| `LOG_LEVEL` | `debug` | One of `info,debug,trace,error,warn` |
-| `CONFIG_FILE` | `/etc/docker-discovery/config.edn` | |
-| `DOCKER_API_VERSION` | `v1.40` | |
-| `DOCKER_EXPOSURE` | `mqtt` | Comma-separated list of `mqtt,websocket,rest` |
-| `HTTP_PORT` | `3000` | |
-| `HTTP_USERNAME` | | |
-| `HTTP_PASSWORD` | | |
-| `MQTT_URI` | | |
-| `MQTT_USERNAME` | | |
-| `MQTT_PASSWORD` | | |
-| `MQTT_REFRESH` | `3600` | Refresh interval in seconds |
-| `MQTT_PLATFORMS` | | `homeassistant` is the only supported platform atm. |
-| `WEBSOCKET_REFRESH` | `3600` | Refresh interval in seconds |
-| `HOST_<NAME>_URI` | | |
-| `HOST_<NAME>_EVENTS` | `true` | `false` will disable listeing for events for this particular host. |
-| `HOST_<NAME>_USERNAME` | | |
-| `HOST_<NAME>_PASSWORD` | | |
+You can either configure the app using an [edn](https://github.com/edn-format/edn) file,
+or by specifying environment variables.
+
+### Multi-value properties
+
+__EDN__: Keyword-values inside a `set`, ex.: `#{:mqtt :rest}` 
+
+__Environment properties__: Comma-separated string-value, ex.: `"mqtt,rest"`
+
+### Properties
+
+| Property _(edn and env vars)_ | Default | Possible values | Multi-value? |
+|-------------------------------|---------|-----------------|:------------:| 
+| `CONFIG_FILE` | `/etc/docker-discovery/config.edn` | | |
+| `:log-level`<br/>`LOG_LEVEL` | `:debug`<br/>`"debug"` | `:debug` `:info` `:trace` `:warn` `:error`<br/>`"debug"` `"info"` `"trace"` `"warn"` `"error"` | |
+| `:docker.api-version`<br/>`DOCKER_API_VERSION` | `"v1.40"` | | |
+| `:docker.exposure`<br/>`DOCKER_EXPOSURE` | `#{:mqtt}`<br/>`"mqtt"` | `:mqtt` `:websocket` `rest`<br/>`"mqtt"` `"websocket"` `"rest"` | ☑️ |
+| `:http.port`<br/>`HTTP_PORT` | `3000` | | |
+| `:http.username`<br/>`HTTP_USERNAME` | | | |
+| `:http.password`<br/>`HTTP_PASSWORD` | | | |
+| `:mqtt.uri`<br/>`MQTT_URI` | | | |
+| `:mqtt.username`<br/>`MQTT_USERNAME` | | | |
+| `:mqtt.password`<br/>`MQTT_PASSWORD` | | | |
+| `:mqtt.refresh`<br/>`MQTT_REFRESH` | `3600` (seconds) | | |
+| `:mqtt.platforms`<br/>`MQTT_PLATFORMS` | | `:homeassistant`<br/>`"homeassistant"` | ☑️ |
+| `:websocket.refresh`<br/>`WEBSOCKET_REFRESH` | `3600` (seconds) | | |
+| `:docker.host.<name>.uri`<br/>`HOST_<NAME>_URI` | | | |
+| `:docker.host.<name>.events`<br/>`HOST_<NAME>_EVENTS` | `true` | | |
+| `:docker.host.<name>.username`<br/>`HOST_<NAME>_USERNAME` | | | |
+| `:docker.host.<name>.password`<br/>`HOST_<NAME>_PASSWORD` | | | |
+
+### Example EDN file
+
+```clojure
+{:log-level :debug
+ :docker-exposure #{:websocket :rest :mqtt}
+ :docker {:api-version "v1.40"
+          :hosts {:local {:uri "///var/run/docker.sock"
+                          :events true}
+                  :remote {:uri "tcp://192.168.0.1:2375"
+                           :events false
+                           :username "user"
+                           :password "passwd"}}}
+ :http {:port 3000
+        :username "user"
+        :password "pass"}
+ :websocket {:refresh 3600}
+ :mqtt {:uri "tcp://192.168.0.2:1883"
+        :refresh 300
+        :username "user"
+        :password "pass"
+        :platforms #{:homeassistant}}
+ :rest {:username "user"
+        :pass "pass"}}
+```
 
 ## Security
 
@@ -72,79 +99,13 @@ authentication (`basic auth`) in the proxy manager instead, it gives more flexib
 
 ## MQTT
 
+Set the MQTT username and password properties if your broker requires authentication.
+
 ### HomeAssistant
 
 ## WebSockets
 
-### Start listening for Docker events
-
-#### Request
-
-```json
-{
-  "messageId": "some-id-123",
-  "command": "start_listening",
-  "events": {
-    "container": {
-      "start": true,
-      "stop": true
-    }
-  }
-}
-```
-
-#### Response
-
-```json
-{
-  "messageId": "some-id-123",
-  "command": "start_listening",
-  "success": true,
-  "result": {
-    "state": {
-      "hosts": [
-        {
-          "name": "docker-host-1",
-          "attributes": {
-            "manufacturer": "Docker Inc."
-          },
-          "containers": [
-            {
-              "id": "container-id-1",
-              "name": "Docker Discovery",
-              "attributes": {
-                "state": "running",
-                "status": "Up 35 hours"
-              }
-            }
-          ]
-        }
-      ]
-    }
-  }
-}
-```
-
-### Stop listening for Docker events
-
-#### Request
-
-```json
-{
-  "messageId": "some-id-321",
-  "command": "stop_listening"
-}
-```
-
-#### Response
-
-```json
-{
-  "messageId": "some-id-321",
-  "command": "stop_listening",
-  "success": true
-}
-```
+You can find the websocket api [here](doc/websocket-api.md).
 
 ## Future plans
 * Use [component](https://github.com/stuartsierra/component) to manage lifecycle.
@@ -155,6 +116,14 @@ authentication (`basic auth`) in the proxy manager instead, it gives more flexib
 * Support other MQTT platforms than HomeAssistant (?)
 * Create a custom HomeAssistant integration making use of the WebSockets event. This will be a separate repo of course.
 * Create a custom HomeAssistant Lovelace card displaying more of the Docker container attributes etc. Also a separate repo.
+
+## Technologies
+
+<a target="_blank" href="https://clojure.org/"><img height="40" src="https://raw.githubusercontent.com/ezand/docker-discovery/main/doc/clojure.svg" /></a>
+&nbsp;&nbsp;<a target="_blank" href="https://www.docker.com/"><img height="40" src="https://github.com/ezand/docker-discovery/raw/main/doc/docker.png" /></a>
+&nbsp;&nbsp;<a target="_blank" href="https://mqtt.org/"><img height="40" src="https://raw.githubusercontent.com/ezand/docker-discovery/main/doc/mqtt.svg" /></a>
+&nbsp;&nbsp;<a target="_blank" href="https://en.wikipedia.org/wiki/WebSocket"><img height="40" src="https://github.com/ezand/docker-discovery/raw/main/doc/websockets.png" /></a>
+&nbsp;&nbsp;<a target="_blank" href="https://www.home-assistant.io/docs/mqtt/discovery/"><img height="40" src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Home_Assistant_Logo.svg" /></a>
 
 ## License
 
