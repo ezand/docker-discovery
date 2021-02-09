@@ -13,3 +13,4 @@ pom.xml.asc
 dev.env
 .idea
 *.iml
+.DS_Store

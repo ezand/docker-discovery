@@ -2,22 +2,31 @@
   <img height="300" src="https://github.com/ezand/docker-discovery/raw/main/doc/logo.png">
 </p>
 
-# docker-discovery
 ![lint status](https://github.com/ezand/docker-discovery/workflows/lint/badge.svg)
 
-FIXME: description
+<div align="center">
+  <img height="40" src="https://raw.githubusercontent.com/ezand/docker-discovery/main/doc/clojure.svg" />
+  &nbsp;&nbsp;<img height="40" src="https://github.com/ezand/docker-discovery/raw/main/doc/docker.png" />
+  &nbsp;&nbsp;<img height="40" src="https://raw.githubusercontent.com/ezand/docker-discovery/main/doc/mqtt.svg" />
+  &nbsp;&nbsp;<img height="40" src="https://github.com/ezand/docker-discovery/raw/main/doc/websockets.png" />
+</div>
+
+# Work in progress
+
+## Features
+* Run in [Docker](https://www.docker.com/)
+* Run as standalone [Clojure](https://clojure.org/) app
+* Fully configurable
+* REST API
+* Receive Docker [events](https://docs.docker.com/engine/reference/commandline/events/)
+  * Through [WebSockets](https://en.wikipedia.org/wiki/WebSocket)
+  * Through [MQTT](https://mqtt.org/)
+* Start/stop Docker containers
+* [HomeAssistant MQTT discovery](https://www.home-assistant.io/docs/mqtt/discovery/) compatible
 
 ## Installation
 
-Download from http://example.com/FIXME.
-
-## Usage
-
-FIXME: explanation
-
-    $ java -jar docker-discovery-0.1.0-standalone.jar [args]
-
-## Options
+## Configuration
 
 ### Environment variables
 | Name | Default | Example |
@@ -38,6 +47,8 @@ FIXME: explanation
 | `DOCKER_<HOST>_EVENTS` | | |
 | `DOCKER_<HOST>_USERNAME` | | |
 | `DOCKER_<HOST>_PASSWORD` | | |
+
+## HomeAssistant
 
 ## WebSockets
 
