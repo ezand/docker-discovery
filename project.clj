@@ -1,6 +1,13 @@
 (defproject docker-discovery "0.1.0-SNAPSHOT"
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
+  :license {:name "MIT"
+            :comment "MIT License"
+            :url "https://choosealicense.com/licenses/mit"
+            :email "eiriksand@gmail.com"
+            :author "Eirik Stenersen Sand"
+            :year 2021
+            :key "mit"}
   :dependencies [[ch.qos.logback/logback-classic "1.2.3"]
                  [clj-time "0.15.2"]
                  [clojurewerkz/machine_head "1.0.0"]
@@ -17,6 +24,7 @@
                  [superstring "3.0.0"]]
   :main ^:skip-aot docker-discovery.core
   :target-path "target/%s"
+  :plugins [[lein-license "1.0.0"]]
   :profiles {:dev {:dependencies [[clj-kondo "2020.10.10" :exclusions [org.clojure/clojure]]]}
              :uberjar {:aot :all}}
   :aliases {"lint" ["run" "-m" "clj-kondo.main" "--lint" "src"]})
