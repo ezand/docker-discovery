@@ -5,11 +5,11 @@
 ![lint status](https://github.com/ezand/docker-discovery/workflows/lint/badge.svg)
 
 <div align="center">
-  <img height="40" src="https://raw.githubusercontent.com/ezand/docker-discovery/main/doc/clojure.svg" />
-  &nbsp;&nbsp;<img height="40" src="https://github.com/ezand/docker-discovery/raw/main/doc/docker.png" />
-  &nbsp;&nbsp;<img height="40" src="https://raw.githubusercontent.com/ezand/docker-discovery/main/doc/mqtt.svg" />
-  &nbsp;&nbsp;<img height="40" src="https://github.com/ezand/docker-discovery/raw/main/doc/websockets.png" />
-  &nbsp;&nbsp;<img height="40" src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Home_Assistant_Logo.svg" />
+  <a target="_blank" href="https://clojure.org/"><img height="40" src="https://raw.githubusercontent.com/ezand/docker-discovery/main/doc/clojure.svg" /></a>
+  &nbsp;&nbsp;<a target="_blank" href="https://www.docker.com/"><img height="40" src="https://github.com/ezand/docker-discovery/raw/main/doc/docker.png" /></a>
+  &nbsp;&nbsp;<a target="_blank" href="https://mqtt.org/"><img height="40" src="https://raw.githubusercontent.com/ezand/docker-discovery/main/doc/mqtt.svg" /></a>
+  &nbsp;&nbsp;<a target="_blank" href="https://en.wikipedia.org/wiki/WebSocket"><img height="40" src="https://github.com/ezand/docker-discovery/raw/main/doc/websockets.png" /></a>
+  &nbsp;&nbsp;<a target="_blank" href="https://www.home-assistant.io/docs/mqtt/discovery/"><img height="40" src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Home_Assistant_Logo.svg" /></a>
 </div>
 
 # Work in progress
@@ -28,32 +28,49 @@
   * Through [MQTT](https://mqtt.org/)
 * Start / stop Docker containers
 * [HomeAssistant MQTT discovery](https://www.home-assistant.io/docs/mqtt/discovery/) compatible
+* Docker container attributes available as entity attributes in HomeAssistant.
 
 ## Installation
 
 ## Configuration
 
 ### Environment variables
-| Name | Default | Example |
-|------|---------|---------|
-| `LOG_LEVEL` | | |
-| `CONFIG_FILE` | | |
-| `DOCKER_API_VERSION` | | |
-| `DOCKER_EXPOSURE` | | |
-| `HTTP_PORT` | | |
+| Name | Default | Description |
+|------|---------|-------------|
+| `LOG_LEVEL` | `debug` | One of `info,debug,trace,error,warn` |
+| `CONFIG_FILE` | `/etc/docker-discovery/config.edn` | |
+| `DOCKER_API_VERSION` | `v1.40` | |
+| `DOCKER_EXPOSURE` | `mqtt` | Comma-separated list of `mqtt,websocket,rest` |
+| `HTTP_PORT` | `3000` | |
 | `HTTP_USERNAME` | | |
 | `HTTP_PASSWORD` | | |
 | `MQTT_URI` | | |
 | `MQTT_USERNAME` | | |
 | `MQTT_PASSWORD` | | |
-| `MQTT_REFRESH` | | |
-| `WEBSOCKET_REFRESH` | | |
-| `DOCKER_<HOST>_URI` | | |
-| `DOCKER_<HOST>_EVENTS` | | |
-| `DOCKER_<HOST>_USERNAME` | | |
-| `DOCKER_<HOST>_PASSWORD` | | |
+| `MQTT_REFRESH` | `3600` | Refresh interval in seconds |
+| `MQTT_PLATFORMS` | | `homeassistant` is the only supported platform atm. |
+| `WEBSOCKET_REFRESH` | `3600` | Refresh interval in seconds |
+| `HOST_<NAME>_URI` | | |
+| `HOST_<NAME>_EVENTS` | `true` | `false` will disable listeing for events for this particular host. |
+| `HOST_<NAME>_USERNAME` | | |
+| `HOST_<NAME>_PASSWORD` | | |
 
-## HomeAssistant
+## Security
+
+To enable `basic authentication` on the REST endpoints, set the 
+`http.username` and `http.password` properties. If you don't need the REST API,
+I recommend disabling it by omitting it from the `docker-exposure` property.
+
+### SSL
+
+Docker Discovery doesn't provide a built-in solution for HTTPS or WSS. I recommend
+placing something like Nginx in front to provide that functionality. I can recommend
+[Nginx Proxy Manager](https://nginxproxymanager.com/) 👍 With that you can also handle
+authentication (`basic auth`) in the proxy manager instead, it gives more flexibility.
+
+## MQTT
+
+### HomeAssistant
 
 ## WebSockets
 
@@ -127,8 +144,15 @@
 }
 ```
 
-## Examples
-...
+## Future plans
+* Use [component](https://github.com/stuartsierra/component) to manage lifecycle.
+* Make more of the features configurable.
+* More Docker information available through REST API, without duplicating the original Docker API.
+* Make WebSockets more secure (?). Some kind of credentials (?)
+* Handle more Docker events.
+* Support other MQTT platforms than HomeAssistant (?)
+* Create a custom HomeAssistant integration making use of the WebSockets event. This will be a separate repo of course.
+* Create a custom HomeAssistant Lovelace card displaying more of the Docker container attributes etc. Also a separate repo.
 
 ## License
 
