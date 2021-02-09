@@ -8,16 +8,6 @@
 ![GitHub](https://img.shields.io/github/license/ezand/docker-discovery)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/ezand/docker-discovery)
 
-<div align="center">
-  <a target="_blank" href="https://clojure.org/"><img height="40" src="https://raw.githubusercontent.com/ezand/docker-discovery/main/doc/clojure.svg" /></a>
-  &nbsp;&nbsp;<a target="_blank" href="https://www.docker.com/"><img height="40" src="https://github.com/ezand/docker-discovery/raw/main/doc/docker.png" /></a>
-  &nbsp;&nbsp;<a target="_blank" href="https://mqtt.org/"><img height="40" src="https://raw.githubusercontent.com/ezand/docker-discovery/main/doc/mqtt.svg" /></a>
-  &nbsp;&nbsp;<a target="_blank" href="https://en.wikipedia.org/wiki/WebSocket"><img height="40" src="https://github.com/ezand/docker-discovery/raw/main/doc/websockets.png" /></a>
-  &nbsp;&nbsp;<a target="_blank" href="https://www.home-assistant.io/docs/mqtt/discovery/"><img height="40" src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Home_Assistant_Logo.svg" /></a>
-</div>
-
-# Work in progress
-
 ## Features
 * Run in [Docker](https://www.docker.com/)
 * Run as standalone [Clojure](https://clojure.org/) app
@@ -33,6 +23,14 @@
 * Start / stop Docker containers
 * [HomeAssistant MQTT discovery](https://www.home-assistant.io/docs/mqtt/discovery/) compatible
 * Docker container attributes available as entity attributes in HomeAssistant.
+
+## Technologies
+
+<a target="_blank" href="https://clojure.org/"><img height="40" src="https://raw.githubusercontent.com/ezand/docker-discovery/main/doc/clojure.svg" /></a>
+&nbsp;&nbsp;<a target="_blank" href="https://www.docker.com/"><img height="40" src="https://github.com/ezand/docker-discovery/raw/main/doc/docker.png" /></a>
+&nbsp;&nbsp;<a target="_blank" href="https://mqtt.org/"><img height="40" src="https://raw.githubusercontent.com/ezand/docker-discovery/main/doc/mqtt.svg" /></a>
+&nbsp;&nbsp;<a target="_blank" href="https://en.wikipedia.org/wiki/WebSocket"><img height="40" src="https://github.com/ezand/docker-discovery/raw/main/doc/websockets.png" /></a>
+&nbsp;&nbsp;<a target="_blank" href="https://www.home-assistant.io/docs/mqtt/discovery/"><img height="40" src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Home_Assistant_Logo.svg" /></a>
 
 ## Installation
 
