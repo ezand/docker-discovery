@@ -1,3 +1,7 @@
+<p align="center">
+  <img height="300" src="https://github.com/ezand/docker-discovery/raw/main/doc/logo.png">
+</p>
+
 # docker-discovery
 ![lint status](https://github.com/ezand/docker-discovery/workflows/lint/badge.svg)
 
