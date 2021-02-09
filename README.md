@@ -6,6 +6,7 @@
 ![build status](https://github.com/ezand/docker-discovery/workflows/build/badge.svg)
 ![dep-check status](https://github.com/ezand/docker-discovery/workflows/dep-check/badge.svg)
 ![GitHub](https://img.shields.io/github/license/ezand/docker-discovery)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/ezand/docker-discovery)
 
 <div align="center">
   <a target="_blank" href="https://clojure.org/"><img height="40" src="https://raw.githubusercontent.com/ezand/docker-discovery/main/doc/clojure.svg" /></a>
