@@ -1,4 +1,4 @@
-(defproject docker-discovery "0.1.0-SNAPSHOT"
+(defproject docker-discovery "0.1.0"
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
   :license {:name "MIT"
