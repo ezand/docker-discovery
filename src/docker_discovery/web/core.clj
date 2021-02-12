@@ -23,7 +23,7 @@
 (defn start []
   (when-not (started? :web)
     (->> (web/run (-> (wrap-defaults app site-defaults)
-                      (auth/wrap-rest-authentication)
+                      (auth/wrap-http-authentication)
                       (websocket/wrap-ws))
                   {:port (cfg/get :web :port)})
          (service-context :web))

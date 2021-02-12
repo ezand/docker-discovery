@@ -35,7 +35,7 @@
 (defmethod handle-event :container [{:keys [status] :as event} host]
   (log/trace "Handling container event on host" host ":" event)
 
-  (when (not-empty (cfg/get :docker-exposure))
+  (when (not-empty (cfg/get :docker :exposure))
     (let [event* (-> (update event :status keyword)
                      (assoc :local-name host))
           host-info (host/info host)]

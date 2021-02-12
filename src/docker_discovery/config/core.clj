@@ -7,21 +7,21 @@
 (cfg/define
   {:log-level {:one-of #{:info :debug :trace :error :warn}
                :default :debug}
-   :docker-exposure {:type :edn
-                     :default #{:mqtt :rest}}
    :docker {:nested {:api-version {:type :string
                                    :default "v1.40"}
+                     :exposure {:type :edn
+                                :default #{:mqtt :rest}}
                      :hosts {:nested {:name {:uri {:type :string}
                                              :events {:type :boolean}
                                              :username {:type :string}
                                              :password {:type :string
                                                         :secret true}}}}}}
    :http {:nested {:port {:type :number
-                          :default 3000}}}
-   :websocket {:nested {:refresh {:type :number}}}
-   :rest {:nested {:username {:type :string}
+                          :default 3000}
+                   :username {:type :string}
                    :password {:type :string
                               :secret true}}}
+   :websocket {:nested {:refresh {:type :number}}}
    :mqtt {:nested {:uri {:type :string}
                    :username {:type :string}
                    :password {:type :string

@@ -96,7 +96,7 @@
     (when (.exists file) file)))
 
 (defn exposure-enabled? [exposure]
-  (get (cfg/get :docker-exposure) exposure))
+  (get (cfg/get :docker :exposure) exposure))
 
 (defn- camelize-keys*
   "Rename the keys in `m` to use the camelCase naming convention."

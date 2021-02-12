@@ -82,18 +82,19 @@
        (reduce docker-host {})
        (util/trim-to-nil)))
 
-(defn- docker-props []
-  (-> {}
-      (util/assoc-some :api-version (str-value DOCKER_API_VERSION))
-      (util/assoc-some :hosts (docker-hosts))
-      (util/trim-to-nil)))
-
 (defn- docker-exposure []
   (some-> (str-value DOCKER_EXPOSURE)
           (str/split #",\s*")
           (keywordize-all)
           (set)
           (util/trim-to-nil)))
+
+(defn- docker-props []
+  (-> {}
+      (util/assoc-some :api-version (str-value DOCKER_API_VERSION))
+      (util/assoc-some :exposure (docker-exposure))
+      (util/assoc-some :hosts (docker-hosts))
+      (util/trim-to-nil)))
 
 (defn- mqtt-platforms []
   (some-> (str-value MQTT_PLATFORMS)
@@ -102,15 +103,11 @@
           (set)
           (util/trim-to-nil)))
 
-(defn- web-props []
+(defn- http-props []
   (-> {}
-      (util/assoc-some :port (int-value HTTP_PORT))))
-
-(defn- rest-props []
-  (-> {}
+      (util/assoc-some :port (int-value HTTP_PORT))
       (util/assoc-some :username (str-value HTTP_USERNAME))
-      (util/assoc-some :password (str-value HTTP_PASSWORD))
-      (util/trim-to-nil)))
+      (util/assoc-some :password (str-value HTTP_PASSWORD))))
 
 (defn- mqtt-props []
   (-> {}
@@ -132,8 +129,6 @@
   (-> {}
       (util/assoc-some :log-level (kwd-value LOG_LEVEL))
       (util/assoc-some :docker (docker-props))
-      (util/assoc-some :docker-exposure (docker-exposure))
-      (util/assoc-some :web (web-props))
-      (util/assoc-some :rest (rest-props))
+      (util/assoc-some :http (http-props))
       (util/assoc-some :mqtt (mqtt-props))
       (util/assoc-some :websocket (websocket-props))))

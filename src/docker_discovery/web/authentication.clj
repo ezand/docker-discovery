@@ -5,6 +5,7 @@
             [docker-discovery.log :as log]))
 
 (def ^:private ^:const rest-path-regex #"^(\/api$|\/api\/.*$)")
+(def ^:private ^:const websocket-path-regex #"^(\/ws$|\/ws\/.*$)")
 
 (defn authenticated? [service username password]
   (if (cfg/get service :username)
@@ -12,12 +13,14 @@
          (= password (cfg/get service :password)))
     true))
 
-(defn wrap-rest-authentication [handler]
-  (if (and (util/exposure-enabled? :rest)
-           (cfg/get :rest :username))
+(defn wrap-http-authentication [handler]
+  (if (and (or (util/exposure-enabled? :rest)
+               (util/exposure-enabled? :websocket))
+           (cfg/get :http :username))
     (fn [{:keys [uri] :as request}]
-      (if (re-matches rest-path-regex uri)
-        (let [secure-handler (wrap-basic-authentication handler (partial authenticated? :rest))]
+      (if (or (re-matches rest-path-regex uri)
+              (re-matches websocket-path-regex uri))
+        (let [secure-handler (wrap-basic-authentication handler (partial authenticated? :http))]
           (log/trace "Handling secure REST endpoint:" uri)
           (secure-handler request))
         (handler request)))

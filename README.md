@@ -63,8 +63,8 @@ __Environment properties__: Comma-separated string-value, ex.: `"mqtt,rest"`
 
 ```clojure
 {:log-level :debug
- :docker-exposure #{:websocket :rest :mqtt}
  :docker {:api-version "v1.40"
+          :exposure #{:websocket :rest :mqtt}
           :hosts {:local {:uri "///var/run/docker.sock"
                           :events true}
                   :remote {:uri "tcp://192.168.0.1:2375"
@@ -79,16 +79,14 @@ __Environment properties__: Comma-separated string-value, ex.: `"mqtt,rest"`
         :refresh 300
         :username "user"
         :password "pass"
-        :platforms #{:homeassistant}}
- :rest {:username "user"
-        :pass "pass"}}
+        :platforms #{:homeassistant}}}
 ```
 
 ## Security
 
-To enable `basic authentication` on the REST endpoints, set the 
+To enable `basic authentication` on the REST and WebSocket endpoints, set the 
 `http.username` and `http.password` properties. If you don't need the REST API,
-I recommend disabling it by omitting it from the `docker-exposure` property.
+I recommend disabling it by omitting it from the `docker.exposure` property.
 
 ### SSL
 
@@ -103,17 +101,22 @@ Set the MQTT username and password properties if your broker requires authentica
 
 ### HomeAssistant
 
+When enabled, Docker Discovery will publish HomeAssistant supported messages to MQTT.
+
+Each Docker host will become a `device` and the containers will become `switches` for that respective device.
+
+The switches will have some container attributes available on the `entity`.
+
 ## WebSockets
 
 You can find the websocket api [here](doc/websocket-api.md).
 
 ## Future plans
-* Use [component](https://github.com/stuartsierra/component) to manage lifecycle.
 * Make more of the features configurable.
 * More Docker information available through REST API, without duplicating the original Docker API.
-* Make WebSockets more secure (?). Some kind of credentials (?)
 * Handle more Docker events.
 * Support other MQTT platforms than HomeAssistant (?)
+* Use [component](https://github.com/stuartsierra/component) to manage application lifecycle.
 * Create a custom HomeAssistant integration making use of the WebSockets event. This will be a separate repo of course.
 * Create a custom HomeAssistant Lovelace card displaying more of the Docker container attributes etc. Also a separate repo.
 

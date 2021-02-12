@@ -1,18 +1,18 @@
 {:log-level :debug
- :docker-exposure #{:websocket :rest :mqtt}
  :docker {:api-version "v1.40"
+          :exposure #{:websocket :rest :mqtt}
           :hosts {:local {:uri "///var/run/docker.sock"
                           :events true}
                   :remote {:uri "tcp://192.168.0.1:2375"
                            :events false
                            :username "user"
                            :password "passwd"}}}
- :web {:port 3000}
+ :http {:port 3000
+        :username "user"
+        :pass "pass"}
  :websocket {:refresh 3600}
  :mqtt {:uri "tcp://192.168.0.2:1883"
         :refresh 300
         :username "user"
         :password "pass"
-        :platforms #{:homeassistant}}
- :rest {:username "user"
-        :pass "pass"}}
+        :platforms #{:homeassistant}}}
