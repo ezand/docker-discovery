@@ -10,7 +10,7 @@ import {
   CSidebarMinimizer,
   CSidebarNavDropdown,
   CSidebarNavItem,
-} from '@coreui/react'
+} from '@coreui/react';
 
 import CIcon from '@coreui/icons-react'
 
@@ -29,14 +29,10 @@ const TheSidebar = () => {
       <CSidebarBrand className="d-md-down-none" to="/">
         <CIcon
           className="c-sidebar-brand-full"
-          name="logo-negative"
+          name="cib-docker"
           height={35}
         />
-        <CIcon
-          className="c-sidebar-brand-minimized"
-          name="sygnet"
-          height={35}
-        />
+        <div style={{marginLeft: "10px"}}>Docker Discovery</div>
       </CSidebarBrand>
       <CSidebarNav>
 

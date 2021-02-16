@@ -1,6 +1,6 @@
 {
-  "short_name": "CoreUI-React",
-  "name": "CoreUI-React sample",
+  "short_name": "Docker Discovery",
+  "name": "Docker Discovery Dashboard",
   "icons": [
     {
       "src": "./assets/img/favicon.png",
