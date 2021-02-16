@@ -27,6 +27,6 @@
   :plugins [[lein-ancient "0.7.0"]
             [lein-license "1.0.0"]
             [lein-nvd "1.4.1"]]
-  :profiles {:dev {:dependencies [[clj-kondo "2021.01.20" :exclusions [org.clojure/clojure]]]}
+  :profiles {:dev {:dependencies [[clj-kondo "2021.02.13" :exclusions [org.clojure/clojure]]]}
              :uberjar {:aot :all}}
   :aliases {"lint" ["run" "-m" "clj-kondo.main" "--lint" "src"]})

@@ -1,4 +1,4 @@
-name: lint
+name: server-lint
 on: push
 jobs:
   build:

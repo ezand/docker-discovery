@@ -1,4 +1,4 @@
-name: build
+name: server-build
 on: push
 jobs:
   build:
