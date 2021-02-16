@@ -17,7 +17,7 @@
                                              :password {:type :string
                                                         :secret true}}}}}}
    :http {:nested {:port {:type :number
-                          :default 3000}
+                          :default 3001}
                    :username {:type :string}
                    :password {:type :string
                               :secret true}}}
