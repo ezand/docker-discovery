@@ -2,9 +2,9 @@
   <img height="300" src="https://github.com/ezand/docker-discovery/raw/main/doc/logo.png">
 </p>
 
-![lint status](https://github.com/ezand/docker-discovery/workflows/lint/badge.svg)
-![build status](https://github.com/ezand/docker-discovery/workflows/build/badge.svg)
-![dep-check status](https://github.com/ezand/docker-discovery/workflows/dep-check/badge.svg)
+![lint status](https://github.com/ezand/docker-discovery/workflows/server-lint/badge.svg)
+![build status](https://github.com/ezand/docker-discovery/workflows/server-build/badge.svg)
+![dep-check status](https://github.com/ezand/docker-discovery/workflows/server-dep-check/badge.svg)
 ![GitHub](https://img.shields.io/github/license/ezand/docker-discovery)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/ezand/docker-discovery)
 
@@ -33,14 +33,14 @@ or by specifying environment variables.
 
 ### Multi-value properties
 
-__EDN__: Keyword-values inside a `set`, ex.: `#{:mqtt :rest}` 
+__EDN__: Keyword-values inside a `set`, ex.: `#{:mqtt :rest}`
 
 __Environment properties__: Comma-separated string-value, ex.: `"mqtt,rest"`
 
 ### Properties
 
 | Property _(edn and env vars)_ | Default | Possible values | Multi-value? |
-|-------------------------------|---------|-----------------|:------------:| 
+|-------------------------------|---------|-----------------|:------------:|
 | `CONFIG_FILE` | `/etc/docker-discovery/config.edn` | | |
 | `:log-level`<br/>`LOG_LEVEL` | `:debug`<br/>`"debug"` | `:debug` `:info` `:trace` `:warn` `:error`<br/>`"debug"` `"info"` `"trace"` `"warn"` `"error"` | |
 | `:docker.api-version`<br/>`DOCKER_API_VERSION` | `"v1.40"` | | |
@@ -84,7 +84,7 @@ __Environment properties__: Comma-separated string-value, ex.: `"mqtt,rest"`
 
 ## Security
 
-To enable `basic authentication` on the REST and WebSocket endpoints, set the 
+To enable `basic authentication` on the REST and WebSocket endpoints, set the
 `http.username` and `http.password` properties. If you don't need the REST API,
 I recommend disabling it by omitting it from the `docker.exposure` property.
 
