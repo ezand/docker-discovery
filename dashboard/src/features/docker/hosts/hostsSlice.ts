@@ -8,6 +8,7 @@ const hostsSlice = createSlice({
     name: 'hostList',
     initialState: {
         hosts: [] as Host[],
+        loading: false,
         error: undefined
     } as HostsState,
     reducers: {
@@ -20,19 +21,23 @@ const hostsSlice = createSlice({
             })}
         },
         fetchHostsSuccess(state, action: PayloadAction<Host[]>) {
-            return {...state, hosts: action.payload || []}
+            return {...state, hosts: action.payload || [], loading: false}
         },
         fetchHostsFailed(state, action: PayloadAction<string>) {
-            return {...state, error: action.payload}
+            return {...state, error: action.payload, loading: false}
+        },
+        setLoading(state, action: PayloadAction<boolean>) {
+            return {...state, loading: action.payload}
         }
     }
 })
 
-export const { addHost, removeHost, fetchHostsSuccess, fetchHostsFailed } = hostsSlice.actions
+export const { addHost, removeHost, fetchHostsSuccess, fetchHostsFailed, setLoading } = hostsSlice.actions
 
 export default hostsSlice.reducer;
 
 export const fetchDockerHosts = (): AppThunk => async dispatch => {
+    dispatch(setLoading(true))
     fetchHosts().then(
         hosts => dispatch(fetchHostsSuccess(hosts)),
         error => dispatch(fetchHostsFailed(error.toString()))

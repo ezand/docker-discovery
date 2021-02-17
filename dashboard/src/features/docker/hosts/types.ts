@@ -4,5 +4,6 @@ export interface Host {
 
 export interface HostsState {
     hosts: Host[],
-    error: string | undefined
+    loading: boolean,
+    error: string | undefined,
 }
