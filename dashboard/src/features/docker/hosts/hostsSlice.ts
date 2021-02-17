@@ -2,15 +2,10 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import { AppThunk } from '../../../app/store'
 import { fetchHosts } from '../../../api/dockerDiscovery'
-import Host from './Host'
-
-interface HostsState {
-    hosts: Host[],
-    error: string | undefined
-}
+import { Host, HostsState } from './types'
 
 const hostsSlice = createSlice({
-    name: 'hosts',
+    name: 'hostList',
     initialState: {
         hosts: [] as Host[],
         error: undefined

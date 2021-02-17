@@ -3,7 +3,7 @@ import { combineReducers } from '@reduxjs/toolkit'
 import hostsReducer from '../features/docker/hosts/hostsSlice'
 
 const rootReducer = combineReducers({
-    hosts: hostsReducer
+    hostList: hostsReducer
 })
 
 export type RootState = ReturnType<typeof rootReducer>
