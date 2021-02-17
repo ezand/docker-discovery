@@ -9,7 +9,8 @@ const hostsSlice = createSlice({
             state.push(action.payload)
         },
         removeHost(state, action: PayloadAction<string>) {
-            state = state.filter((host: Host) => {
+            return state.filter((host: Host) => {
+                console.log("ID: " + host.id)
                 return host.id !== action.payload
             })
         }
