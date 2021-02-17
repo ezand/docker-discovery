@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 import logo from './logo.svg';
 import './App.css';
 import HostList from '../features/docker/hosts/HostList'
-import { addHost, removeHost } from '../features/docker/hosts/hostsSlice'
+import { addHost, removeHost, fetchDockerHosts } from '../features/docker/hosts/hostsSlice'
 
 function App() {
   const dispatch = useDispatch()
@@ -14,7 +14,11 @@ function App() {
   }
 
   const removeIt = () => {
-    dispatch(removeHost("0.9942732197929884"))
+    dispatch(removeHost("0.26016769421395947"))
+  }
+
+  const fetchIt = () => {
+    dispatch(fetchDockerHosts())
   }
 
   return (
@@ -35,6 +39,7 @@ function App() {
         <HostList />
         <button onClick={addId}>Add host!</button>
         <button onClick={removeIt}>Remove host!</button>
+        <button onClick={fetchIt}>Fetch!</button>
       </header>
     </div>
   );
