@@ -12,7 +12,7 @@ interface RouteDefinition {
 const routes: RouteDefinition[] = [
     { path: '/', exact: true },
     { path: '/dashboard', exact: true, component: Dashboard },
-    { path: '/docker/hosts/:id', exact: true, component: HostDetails },
+    { path: '/docker/hosts/:name', exact: true, component: HostDetails },
 ]
 
 export default routes

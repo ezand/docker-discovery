@@ -167,6 +167,14 @@
 (defn docker-host-configured? [host]
   (cfg/get :docker :hosts (keyword host)))
 
+(defn local-uri? [uri]
+  (-> (str/lower-case? uri)
+      (str/starts-with?  "unix:")
+      (some?)))
+
+(defn remote-uri? [uri]
+  (not (local-uri? uri)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Docker container utils ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;

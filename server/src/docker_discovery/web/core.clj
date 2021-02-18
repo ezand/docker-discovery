@@ -25,7 +25,7 @@
     (->> (web/run (-> (wrap-defaults app site-defaults)
                       (auth/wrap-http-authentication)
                       (websocket/wrap-ws))
-                  {:port (cfg/get :web :port)})
+                  {:port (cfg/get :http :port)})
          (service-context :web))
 
     (log/info "Web service has started.")

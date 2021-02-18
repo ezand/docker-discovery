@@ -1,13 +1,13 @@
 import React from 'react'
 import { RouteComponentProps } from 'react-router-dom'
 
-type TParams = { id: string }
+type TParams = { name: string }
 
 const HostDetails = ({match}: RouteComponentProps<TParams>) => {
-    const id = match.params.id
+    const name = match.params.name
 
     return (
-        <div>Host Details: {id}</div>
+        <div>Host Details: {name}</div>
     )
 }
 

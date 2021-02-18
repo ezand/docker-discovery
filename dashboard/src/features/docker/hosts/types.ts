@@ -1,5 +1,6 @@
 export interface Host {
-    id: string
+    name: string,
+    local: boolean
 }
 
 export interface HostsState {

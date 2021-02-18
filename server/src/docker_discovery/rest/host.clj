@@ -1,7 +1,16 @@
 (ns docker-discovery.rest.host
   (:require [compojure.core :refer [defroutes GET]]
             [docker-discovery.docker.host :as docker-host]
-            [docker-discovery.util :as util]))
+            [docker-discovery.util :as util]
+            [omniconf.core :as cfg]))
+
+(defn hosts []
+  (some->> (cfg/get :docker :hosts)
+           (map (fn [[host-name {:keys [uri]}]]
+                  {:name host-name
+                   :uri uri
+                   :local? (util/local-uri? uri)}))
+           (util/json-response)))
 
 (defroutes host-routes
   (GET "/" [host]

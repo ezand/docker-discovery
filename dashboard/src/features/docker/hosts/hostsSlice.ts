@@ -17,7 +17,7 @@ const hostsSlice = createSlice({
         },
         removeHost(state, action: PayloadAction<string>) {
             return {...state, hosts: state.hosts.filter((host: Host) => {
-                return host.id !== action.payload
+                return host.name !== action.payload
             })}
         },
         fetchHostsSuccess(state, action: PayloadAction<Host[]>) {

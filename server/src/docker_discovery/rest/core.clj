@@ -12,6 +12,9 @@
     health/health-routes)
 
   (context "/docker" [_]
+    (GET "/" [_]
+      (host/hosts))
+
     (context "/:host" [_]
       host/host-routes)
 
