@@ -1,25 +1,26 @@
 import React from 'react';
+import { HashRouter, Route, Switch } from 'react-router-dom';
 
 import '../styles/style.scss'
 
-import Header from '../features/layout/Header'
-import Sidebar from '../features/layout/Sidebar'
-import Content from '../features/layout/Content'
-import Footer from '../features/layout/Footer'
+const loading = (
+  <div className="pt-3 text-center">
+    <div className="sk-spinner sk-spinner-pulse"></div>
+  </div>
+)
 
-function App() {
+const Layout = React.lazy(() => import('../features/layout/Layout'))
+
+const App = () => {
   return (
-    <div className="c-app c-default-layout">
-      <Sidebar />
-      <div className="c-wrapper">
-        <Header />
-        <div className="c-body">
-          <Content />
-        </div>
-        <Footer />
-      </div>
-    </div>
-  );
+    <HashRouter>
+          <React.Suspense fallback={loading}>
+            <Switch>
+              <Route path="/" render={() => <Layout />} />
+            </Switch>
+          </React.Suspense>
+      </HashRouter>
+  )
 }
 
 export default App;
