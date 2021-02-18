@@ -5,6 +5,7 @@ import logo from './logo.svg';
 import './App.css';
 import HostList from '../features/docker/hosts/HostList'
 import { addHost, removeHost, fetchDockerHosts } from '../features/docker/hosts/hostsSlice'
+import CIcon from '@coreui/icons-react';
 
 function App() {
   const dispatch = useDispatch()
@@ -40,6 +41,11 @@ function App() {
         <button onClick={addId}>Add host!</button>
         <button onClick={removeIt}>Remove host!</button>
         <button onClick={fetchIt}>Fetch!</button>
+        <CIcon
+          className="c-sidebar-brand-full"
+          name="cib-docker"
+          height={35}
+        />
       </header>
     </div>
   );

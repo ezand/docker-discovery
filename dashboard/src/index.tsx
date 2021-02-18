@@ -3,8 +3,13 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux'
 
 import './index.css';
+import { icons } from './assets/icons'
 import reportWebVitals from './reportWebVitals';
 import store from './app/store'
+
+// Needed for CoreUI icon functionality
+// @ts-ignore
+React.icons = icons
 
 const render = () => {
   const App = require('./app/App').default
