@@ -5,6 +5,8 @@ import {
 
 // Linear
 import {
+    cilGraph,
+    cilSettings,
     cilSpeedometer
 } from '@coreui/icons'
 
@@ -22,6 +24,8 @@ export const icons = {
 
     // Linear
     ...{
+        cilGraph,
+        cilSettings,
         cilSpeedometer
     },
 
