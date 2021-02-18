@@ -30,10 +30,10 @@ const Header = () => {
 
             <CHeaderNav className="d-md-down-none mr-auto">
                 <CHeaderNavItem className="px-3" >
-                    <CHeaderNavLink>Dashboard</CHeaderNavLink>
+                    <CHeaderNavLink to="/dashboard">Dashboard</CHeaderNavLink>
                 </CHeaderNavItem>
                 <CHeaderNavItem className="px-3">
-                    <CHeaderNavLink>Users</CHeaderNavLink>
+                    <CHeaderNavLink to="/docker/hosts/1234">Users</CHeaderNavLink>
                 </CHeaderNavItem>
                 <CHeaderNavItem className="px-3">
                     <CHeaderNavLink>Settings</CHeaderNavLink>
