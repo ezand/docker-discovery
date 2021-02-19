@@ -1,18 +1,19 @@
 import React, { useState } from 'react'
 import { CLink } from '@coreui/react'
+import CIcon from '@coreui/icons-react'
 
 import JsonViewDialog from '../reusable/JsonViewDialog'
 
 interface ApiLinkProps {
     uri: string
-    altText?: string
     children?: any
+    color?: string
 }
 
-const defaultComponent = <small className="text-muted">JSON</small>
-const defaultAltText = "Show JSON"
+//const defaultComponent = <small className="text-muted">JSON</small>
+const defaultComponent = <CIcon name="cil-code" color="white" />
 
-const ApiLink = ({ uri, altText = defaultAltText, children = defaultComponent }: ApiLinkProps) => {
+const ApiLink = ({ color, uri, children = defaultComponent }: ApiLinkProps) => {
     const [modal, setModal] = useState(false)
     const [data, setData] = useState({})
     const [loading, setLoading] = useState(false)
@@ -36,9 +37,8 @@ const ApiLink = ({ uri, altText = defaultAltText, children = defaultComponent }:
         <div className="card-header-actions">
             <JsonViewDialog title={uri} show={modal} loading={loading} onClose={toggleModal} json={data} />
             <CLink
-                alt={altText}
+                style={{color: color}}
                 onClick={onClick}
-                target="_blank"
                 className="card-header-action">
                 {children}
             </CLink>

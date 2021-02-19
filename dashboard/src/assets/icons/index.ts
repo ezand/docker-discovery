@@ -5,6 +5,7 @@ import {
 
 // Linear
 import {
+    cilCode,
     cilGraph,
     cilSettings,
     cilSpeedometer
@@ -24,6 +25,7 @@ export const icons = {
 
     // Linear
     ...{
+        cilCode,
         cilGraph,
         cilSettings,
         cilSpeedometer

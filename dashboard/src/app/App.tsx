@@ -14,7 +14,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(fetchDockerHosts())
-  }, [dispatch]);
+  }, [dispatch])
 
   return (
     <HashRouter>

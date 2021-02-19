@@ -21,7 +21,7 @@ const StyledBody = styled(CModalBody)`
 
 const JsonViewDialog = ({show, loading, title, onClose, json}: JsonViewDialogProps) => {
     return (
-        <CModal size="lg" show={show} onClose={onClose}>
+        <CModal color="info" size="lg" show={show} onClose={onClose}>
             <CModalHeader closeButton>{title}</CModalHeader>
             <StyledBody>
                 {loading ? <FetchSpinner /> : <JsonView json={json} />}

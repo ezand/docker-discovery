@@ -13,7 +13,7 @@
                  [clojurewerkz/machine_head "1.0.0"]
                  [compojure "1.6.2"]
                  [com.grammarly/omniconf "0.4.2"]
-                 [http-kit "2.5.1"]
+                 [http-kit "2.5.2"]
                  [lispyclouds/clj-docker-client "1.0.2"]
                  [medley "1.3.0"]
                  [org.clojure/clojure "1.10.2"]
