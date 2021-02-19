@@ -5,12 +5,7 @@ import { useDispatch } from 'react-redux'
 import '../styles/style.scss'
 
 import { fetchDockerHosts } from '../features/docker/hosts/hostsSlice'
-
-const loading = (
-  <div className="pt-3 text-center">
-    <div className="sk-spinner sk-spinner-pulse"></div>
-  </div>
-)
+import FetchSpinner from '../features/reusable/FetchSpinner'
 
 const Layout = React.lazy(() => import('../features/layout/Layout'))
 
@@ -23,7 +18,7 @@ const App = () => {
 
   return (
     <HashRouter>
-      <React.Suspense fallback={loading}>
+      <React.Suspense fallback={<FetchSpinner />}>
         <Switch>
           <Route path="/" render={() => <Layout />} />
         </Switch>

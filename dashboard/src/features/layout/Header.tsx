@@ -3,6 +3,8 @@ import { useSelector, useDispatch } from 'react-redux'
 import { CHeader, CSubheader, CToggler, CBreadcrumbRouter, CHeaderNav, CHeaderNavItem, CHeaderNavLink, CLink } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 
+import routes from '../../app/routes'
+
 const Header = () => {
     const dispatch = useDispatch()
     const sidebarShow = true // TODO useSelector(state => state.sidebarShow)
@@ -45,7 +47,7 @@ const Header = () => {
             </CHeaderNav>
 
             <CSubheader className="px-3 justify-content-between">
-                <CBreadcrumbRouter className="border-0 c-subheader-nav m-0 px-0 px-md-3" />
+                <CBreadcrumbRouter className="border-0 c-subheader-nav m-0 px-0 px-md-3" routes={routes}/>
 
                 <div className="d-md-down-none mfe-2 c-subheader-nav">
                     <CLink className="c-subheader-nav-link" aria-current="page">

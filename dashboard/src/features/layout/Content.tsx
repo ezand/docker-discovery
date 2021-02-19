@@ -3,18 +3,13 @@ import { Redirect, Route, Switch } from 'react-router-dom'
 import { CContainer, CFade } from '@coreui/react'
 
 import routes from '../../app/routes'
-
-const loading = (
-    <div className="pt-3 text-center">
-        <div className="sk-spinner sk-spinner-pulse"></div>
-    </div>
-)
+import FetchSpinner from '../../features/reusable/FetchSpinner'
 
 const Content = () => {
     return (
         <main className="c-main">
             <CContainer fluid>
-                <Suspense fallback={loading}>
+                <Suspense fallback={<FetchSpinner />}>
                     <Switch>
                         {routes.map((route, idx) => {
                             return route.component && (

@@ -1,16 +1,16 @@
-import { Host } from "../docker/hosts/types"
+import { Host } from '../docker/hosts/types'
 
-const localHostBadge = ({
-    color: 'info',
-    text: 'local',
-})
+const dockerHosts = (hosts: Host[]) => {
+    const localHostBadge = ({
+        color: 'info',
+        text: 'local',
+    })
+    
+    const remoteHostBadge = ({
+        color: 'warning',
+        text: 'remote',
+    })
 
-const remoteHostBadge = ({
-    color: 'warning',
-    text: 'remote',
-})
-
-const nav = (hosts: Host[]) => {
     const hostItems = hosts.map(host => ({
         _tag: 'CSidebarNavItem',
         name: host.name,
@@ -23,6 +23,10 @@ const nav = (hosts: Host[]) => {
         _tag: 'CSidebarNavTitle',
         _children: ['Docker Hosts']
     }, ...hostItems]
+}
+
+const nav = (hosts: Host[]) => {
+    return [...dockerHosts(hosts)]
 }
 
 export default nav
