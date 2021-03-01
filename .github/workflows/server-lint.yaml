@@ -1,0 +1,11 @@
+name: server-lint
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: DeLaGuardo/clojure-lint-action@master
+        with:
+          clj-kondo-args: --lint server/src --config '{:output {:pattern "::{{level}} file={{filename}},line={{row}},col={{col}}::{{message}}"}}'
+          github_token: ${{ secrets.GITHUB_TOKEN }}
